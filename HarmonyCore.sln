@@ -133,13 +133,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postman Files", "Postman Fi
 		PostMan_StagingServiceTireMaxVM.postman_environment.json = PostMan_StagingServiceTireMaxVM.postman_environment.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Publishing Files", "Publishing Files", "{6D545CE6-7377-4FDB-9EF9-83638B8B613E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Publish", "Publish", "{6D545CE6-7377-4FDB-9EF9-83638B8B613E}"
 	ProjectSection(SolutionItems) = preProject
-		check = check
-		dump = dump
-		startserver = startserver
-		PublishForLinux.bat = PublishForLinux.bat
-		stopserver = stopserver
+		Publish\publish.bat = Publish\publish.bat
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HttpTests", "HttpTests", "{51ED81B2-54C6-4706-9F71-9B4F27D1315A}"
@@ -154,6 +150,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HttpTests", "HttpTests", "{
 	EndProjectSection
 EndProject
 Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Repository", "Repository\Repository.synproj", "{D5C15AFB-B432-4197-B931-03E5AE7F15E1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LinuxFiles", "LinuxFiles", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		Publish\LinuxFIles\check = Publish\LinuxFIles\check
+		Publish\LinuxFIles\dump = Publish\LinuxFIles\dump
+		Publish\LinuxFIles\startserver = Publish\LinuxFIles\startserver
+		Publish\LinuxFIles\stopserver = Publish\LinuxFIles\stopserver
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsFiles", "WindowsFiles", "{67E982C3-3FF9-4517-9FB7-6BE3CDE940D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -368,11 +374,17 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{6C9AD151-7DA4-477B-A52C-FB883D9D1057} = {29AEA4C4-62B2-4F46-9B80-5F061D950BE1}
 		{1E3F00B9-F73D-459B-A8DB-310E97FEE18C} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
 		{F11D78B0-4DF7-453C-854C-A87CA031EC84} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
 		{0AE51FCB-6E58-4A51-A681-05498CA61E37} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
 		{8F14351E-8ECB-4B55-9688-2992D80FAA65} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
 		{2C584094-5A66-4A3B-BDEF-634886A6DA1D} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
+		{D4A3155C-11DC-4D65-BAA2-877C986BA3E2} = {29AEA4C4-62B2-4F46-9B80-5F061D950BE1}
+		{6D545CE6-7377-4FDB-9EF9-83638B8B613E} = {29AEA4C4-62B2-4F46-9B80-5F061D950BE1}
+		{51ED81B2-54C6-4706-9F71-9B4F27D1315A} = {29AEA4C4-62B2-4F46-9B80-5F061D950BE1}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {6D545CE6-7377-4FDB-9EF9-83638B8B613E}
+		{67E982C3-3FF9-4517-9FB7-6BE3CDE940D3} = {6D545CE6-7377-4FDB-9EF9-83638B8B613E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8AFF387-4A8D-4C4E-A074-A2815072463A}

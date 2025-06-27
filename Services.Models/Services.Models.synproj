@@ -58,6 +58,11 @@
       <Project>{dfbe0e7b-c223-430a-a7da-fbeac5582fc3}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Repository\Repository.synproj">
+      <Name>Repository</Name>
+      <Private>True</Private>
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy /Y &quot;$(ProjectDir)bin\$(Platform)\$(Configuration)\Services.Models.xml&quot; &quot;$(SolutionDir)XmlDoc\Services.Models.xml&quot; &gt; nul" />
