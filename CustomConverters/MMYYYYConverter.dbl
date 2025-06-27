@@ -1,0 +1,78 @@
+
+import System
+import Harmony.Core.Converters
+import System.Text.RegularExpressions
+
+namespace Harmony.Core.Converters
+
+    ;;; <summary>
+    ;;; Convert between a D6 MMYYYY field and a YYYY-MM string.
+    ;;; </summary>
+    public static class MMYYYYConverter
+
+        ;;; <summary>
+        ;;; Convert from MMYYYY date to YYYY-MM
+        ;;; </summary>
+        ;;; <param name="mmyyDate">MMYYYY date to convert</param>
+        ;;; <returns>Returns YYYY-MM or an empty string if the data is invalid</returns>
+        public static method Convert, string
+            required in group mmyyDate, d6
+                mm,     d2
+                yyyy,   d4
+            endgroup
+        proc
+            ;Validate the data
+            try
+            begin
+                new DateTime((int)yyyy,(int)mm,1)
+            end
+            catch (e, @Exception)
+            begin
+                mreturn String.Empty
+            end
+            endtry
+
+            ;Return YYYY-MM
+            mreturn %string(yyyy,"XXXX") + "-" + %string(mm,"XX")
+        endmethod
+
+        ;;; <summary>
+        ;;; Convert from the EXPOSED format to the STORAGE format
+        ;;; Convert from a YYYY-MM value to a MMYYYY value
+        ;;; </summary>
+        ;;; <param name="theDate">YYYY-MM value to convert</param>
+        ;;; <returns>Returns MMYYYY or 000000 if the data is invalid</returns>
+        public static method ConvertBack, a
+            required in group theDate, a7 ;YYYY-MM
+                yyyy,   d4
+                ,       a1
+                mm,     d2
+            endgroup
+        proc
+            ;Validate inbound data
+            data rx = new Regex("^\d{4}\-(0?[1-9]|1[012])$")
+            if (!rx.IsMatch(theDate))
+            begin
+                mreturn "000000"
+            end
+
+            ;Return MMYYYY
+            mreturn %string(mm,"XX") + %string(yyyy,"XXXX")
+        endmethod
+
+        ;;; <summary>
+        ;;; Convert from the publicly exposed value back to the storage value.
+        ;;; </summary>
+        public class LiteralFormatter implements ILiteralFormatter
+
+            public virtual method FormatLiteral, string
+                inputLiteral, string 
+            proc
+                mreturn MMYYConverter.ConvertBack(inputLiteral)
+            endmethod
+
+        endclass
+
+    endclass
+
+endnamespace

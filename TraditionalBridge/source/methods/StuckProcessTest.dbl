@@ -1,0 +1,39 @@
+;;--------------------------------------------------------------------------------------------------
+;; StuckProcessTest (Test for the stuck process detection code)
+;;
+;;; <summary>
+;;; Test for the stuck process detection code
+;;; </summary>
+;;; <param name="SecondsToRun">How many seconds should the test run for?</param>
+;;; <param name="ErrorMessage">Error message if ReturnValue is ERROR</param>
+;;; <returns>Returns OK or ERROR</returns>
+function StuckProcessTest, string
+    required in    SecondsToRun, n
+    required out   ErrorMessage, string
+    stack record
+        ch, i4
+        retval, string
+    endrecord
+proc
+    if (SecondsToRun > 0) then
+    begin
+        xcall SimulateStuckProcess(SecondsToRun)
+        retval = "OK"
+        ErrorMessage = ""
+    end
+    else
+    begin
+        retval = "ERROR"
+        ErrorMessage = "SecondsToRun must be a positive integer"
+    end
+
+    freturn retval
+
+endfunction
+
+subroutine SimulateStuckProcess
+    required in secondsToRun, n
+proc
+    sleep secondsToRun
+    xreturn
+endsubroutine

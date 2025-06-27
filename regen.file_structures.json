@@ -1,0 +1,27 @@
+[
+    {
+        "Structure": "CUSTOMERS",
+        "Alias": "",
+        "File": ""
+    },
+    {
+        "Structure": "ITEMS",
+        "Alias": "",
+        "File": ""
+    },
+    {
+        "Structure": "ORDERS",
+        "Alias": "",
+        "File": ""
+    },
+    {
+        "Structure": "ORDER_ITEMS",
+        "Alias": "",
+        "File": ""
+    },
+    {
+        "Structure": "VENDORS",
+        "Alias": "",
+        "File": ""
+    }
+]

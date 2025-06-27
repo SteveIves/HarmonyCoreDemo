@@ -1,0 +1,32 @@
+;;*****************************************************************************
+;;
+;; Title:       GetLogicalName.dbl
+;;
+;; Description: An example routine being exposed by Traditional Bridge.
+;;              Returns the Synergy DBL version number and operating system.
+;;
+;;*****************************************************************************
+
+function GetLogicalName, STRING
+    required in  LogicalName, string
+    required out TranslatedValue, string
+    required out ErrorMessage, string
+    stack record
+        translation, a1024
+        length, i4
+    endrecord
+proc
+    xcall getlog(LogicalName,translation,length)
+
+    if (!length)
+    begin
+        TranslatedValue = ""
+        ErrorMessage = ""
+        freturn "ERROR"
+    end
+
+    TranslatedValue = translation(1:length)
+    ErrorMessage = ""
+    freturn "OK"
+
+endfunction

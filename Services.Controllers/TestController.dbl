@@ -1,0 +1,59 @@
+
+import Microsoft.AspNetCore.Mvc
+import Microsoft.Extensions.Configuration
+import Microsoft.Extensions.Options
+import Newtonsoft.Json
+import System
+import System.Collections.Generic
+import System.Linq
+import System.Net.Mime
+import System.Text
+import System.Threading.Tasks
+
+import Services.Controllers
+import Services.Controllers.Temp
+import BridgeAPI
+
+namespace Services.Controllers
+
+    {Route("test")}
+    public partial class TestController extends ControllerBase
+
+        {HttpGet}
+        {Route("ping")}
+        {Produces("text/plain")}
+        public method Ping, @ActionResult<string>
+        proc
+            mreturn ok()
+        endmethod
+
+        {HttpPost}
+        {Route("LoremIpsum")}
+        {Produces("application/json")}
+        public method LoremIpsum, @ActionResult<LoremIpsumBridge_Response>
+            {FromBody}
+            required in aRequest, @LoremIpsumBridge_Request
+        proc
+            data response, @LoremIpsumBridge_Response
+
+            if (aRequest.RecordsToReturn > 0) then
+            begin
+                response = new LoremIpsumBridge_Response() { ReturnValue = "OK", Records = new String[aRequest.RecordsToReturn], ErrorMessage = String.Empty }
+                data ix = 0
+                for ix from 1 thru aRequest.RecordsToReturn
+                begin
+                    response.Records[ix] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat, erat vitae tincidunt tincidunt, nisi ligula malesuada ipsum, nec feugiat nisl dui id libero. Sed interdum, eros eget dapibus aliquet, libero purus elementum urna, et facilisis quam massa non purus."
+                end
+            end
+            else
+            begin
+                response = new LoremIpsumBridge_Response() { ReturnValue = "ERROR", ErrorMessage = "No records requested!" }
+            end
+
+            mreturn ok(response)
+
+        endmethod
+
+    endclass
+
+endnamespace

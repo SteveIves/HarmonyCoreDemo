@@ -1,0 +1,17 @@
+namespace TraditionalBridge
+    
+    {System.Runtime.CompilerServices.CompilerGeneratedAttribute()}
+    {System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")}
+    internal sealed partial class SendToLinux inherits System.Configuration.ApplicationSettingsBase
+        
+        private static defaultInstance, @SendToLinux, (@SendToLinux)System.Configuration.ApplicationSettingsBase.Synchronized(new SendToLinux())
+        
+        public static property Default, @SendToLinux
+            method get
+            proc
+                mreturn defaultInstance
+            endmethod
+        endproperty
+    endclass
+endnamespace
+

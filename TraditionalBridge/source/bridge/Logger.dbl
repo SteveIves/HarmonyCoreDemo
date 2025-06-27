@@ -1,0 +1,245 @@
+import System.Collections
+
+namespace Harmony.TraditionalBridge
+
+    public class Logger
+        public static Instance, @Logger
+        public static LogLevel, int
+
+        private mActiveSettings, @LoggerScopeSettings
+        private mActiveLogEntries, @ArrayList
+        private mLogScopes, @ArrayList
+        private mLoggingChannel, int
+        private mKeepLogScopes, boolean
+        public method Logger
+            logFileName, a
+            logLevel, n
+            keepLogScopes, boolean
+            this(new LoggerScopeSettings("root", false, true, logFileName, false, logLevel, 0, false))
+        proc
+        endmethod
+
+        public method Logger
+            settings, @LoggerScopeSettings
+        proc
+            mActiveSettings = settings
+            mLogScopes = new ArrayList()
+            mActiveLogEntries = new ArrayList()
+            mKeepLogScopes = mKeepLogScopes
+            if(mActiveSettings.OnDiskLogLevel > mActiveSettings.InMemoryLogLevel) then
+                Logger.LogLevel = mActiveSettings.OnDiskLogLevel
+            else
+                Logger.LogLevel = mActiveSettings.InMemoryLogLevel
+
+            if(mActiveSettings.OnDiskLogLevel >= 0)
+            begin
+                open(mLoggingChannel=0, O, settings.LogLocation)
+                Log("Logging started")
+            end
+        endmethod
+
+        public property LogChannel, int
+            method get
+            proc
+                mreturn (mActiveSettings.OnDiskLogLevel >= 0) ? mLoggingChannel : 0
+            endmethod
+        endproperty
+
+        public method LogHnd, void
+            handleValue, D_HANDLE
+        proc
+            if(mLoggingChannel)
+                writes(mLoggingChannel, ^m(handleValue))
+        endmethod
+        
+        public method Log, void
+            strValue, @string
+            record currentDateTime
+                group date         ,a8 
+                    year               ,a4
+                    month              ,a2
+                    day               ,a2
+                endgroup
+                group time         ,a12
+                    hour               ,a2
+                    minute             ,a2
+                    second             ,a2
+                    msecond            ,a6
+                endgroup
+            endrecord
+            record
+                timeString, a28
+                resultLogString, @string
+                timeStringLength, int
+        proc
+            if(mActiveSettings.LogToDisk || mActiveSettings.LogToMemory)
+            begin
+                currentDateTime = %datetime
+                xcall s_bld(timeString,timeStringLength, 
+                &    "%A/%A/%A %A:%A:%A: ", day, month, 
+                &    year, hour, minute, second)
+                resultLogString = timeString(1:timeStringLength) + strValue
+
+                if(mActiveSettings.LogToDisk && mLoggingChannel)
+                begin
+                    if(resultLogString.Length > 32000) then
+                    begin
+                        data index, int, 1
+                        data endIndex, int, 32000
+                        while(index < resultLogString.Length)
+                        begin
+                            writes(mLoggingChannel, resultLogString.Substring(index, (endIndex - index)))
+                            index = endIndex
+                            if(resultLogString.Length > endIndex + 32000) then
+                                endIndex += 32000
+                            else
+                                endIndex = resultLogString.Length
+
+                            if(index > 32000 && mActiveSettings.OnDiskLogLevel < 7)
+                            begin
+
+                                exitloop
+                            end
+                        end
+                    end
+                    else
+                        writes(mLoggingChannel, resultLogString)
+
+                    if(mActiveSettings.FlushLog)
+                        flush(mLoggingChannel)
+                end
+
+                if(mActiveSettings.LogToMemory)
+                begin
+                    mActiveLogEntries.Add(resultLogString)
+                end
+            end
+
+        endmethod
+
+        public method Log, void
+            aValue, a
+        proc
+            if(mActiveSettings.LogToDisk || mActiveSettings.LogToMemory)
+            begin
+                Log((string)aValue)
+            end
+        endmethod
+
+        public method SetRootScope, void
+            settings, @LoggerScopeSettings
+        proc
+            ;;the MaybeLog macros make use of Logger.LogLevel, make sure its set to the least restrictive
+            ;;of the OnDisk and InMemory log levels
+            this.Log("log settings changed OnDisk=" + %string(settings.LogToDisk) + " InMemory=" + %string(settings.LogToMemory))
+            mActiveSettings = settings
+            if(mActiveSettings.OnDiskLogLevel > mActiveSettings.InMemoryLogLevel) then
+                Logger.LogLevel = mActiveSettings.OnDiskLogLevel
+            else
+                Logger.LogLevel = mActiveSettings.InMemoryLogLevel
+        endmethod
+
+
+        public method OpenScope, void
+            settings, @LoggerScopeSettings
+        proc
+            if(mKeepLogScopes)
+            begin
+                data newScope, @LogScope, new LogScope() { LogEntries = mActiveLogEntries, Settings = mActiveSettings }
+                mLogScopes.Add(newScope)
+                mActiveLogEntries = new ArrayList()
+            end
+
+            SetRootScope(settings)
+
+        endmethod
+
+        public method CloseScope, @ArrayList
+            record
+                tempLogEntries, @ArrayList
+                tempLogScope, @LogScope
+        proc
+            tempLogEntries = mActiveLogEntries
+            tempLogScope = (@LogScope)mLogScopes[mLogScopes.Count - 1]
+            mLogScopes.RemoveAt(mLogScopes.Count - 1)
+            mActiveLogEntries = tempLogScope.LogEntries
+
+            SetRootScope(tempLogScope.Settings)
+
+            mreturn tempLogEntries
+        endmethod
+
+        public method FinishMemoryLog, void
+        proc
+            mActiveLogEntries.Clear()
+        endmethod
+
+
+        public method CloseLog, void
+        proc
+            if(mLoggingChannel)
+                close(mLoggingChannel)
+            mLoggingChannel = 0
+        endmethod
+
+        public method CurrentScopeLog, @ArrayList
+        proc
+            mreturn mActiveLogEntries
+        endmethod
+
+        public method CurrentLogSettings, @LoggerScopeSettings
+        proc
+            mreturn mActiveSettings
+        endmethod
+
+
+        public property ShouldAttachLogsToExceptions, boolean
+            method get
+            proc
+                mreturn mActiveSettings.AttachLogsToExceptions
+            endmethod
+        endproperty
+
+    endclass
+
+    class LoggerScopeSettings
+        public method LoggerScopeSettings
+        proc
+        endmethod
+
+        public method LoggerScopeSettings
+            ScopeIdentifier, @string
+            LogToMemory, boolean
+            LogToDisk, boolean
+            LogLocation, @string
+            FlushLog, boolean
+            OnDiskLogLevel, int
+            InMemoryLogLevel, int
+            AttachLogsToExceptions, boolean
+        proc
+            this.ScopeIdentifier = ScopeIdentifier
+            this.LogToMemory = LogToMemory
+            this.LogToDisk = LogToDisk
+            this.LogLocation = LogLocation
+            this.FlushLog = FlushLog
+            this.OnDiskLogLevel = OnDiskLogLevel
+            this.InMemoryLogLevel = InMemoryLogLevel
+            this.AttachLogsToExceptions = AttachLogsToExceptions
+        endmethod
+
+        public ScopeIdentifier, @string
+        public LogToMemory, boolean
+        public LogToDisk, boolean
+        public LogLocation, @string
+        public FlushLog, boolean
+        public OnDiskLogLevel, int
+        public InMemoryLogLevel, int
+        public AttachLogsToExceptions, boolean
+    endclass
+
+    class LogScope
+        public Settings, @LoggerScopeSettings
+        public LogEntries, @ArrayList
+    endclass
+
+endnamespace

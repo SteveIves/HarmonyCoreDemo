@@ -1,0 +1,45 @@
+
+import System
+import System.Collections.Generic
+import System.Text
+import Harmony.Core.Context
+import Renci.SshNet
+
+namespace Services
+
+    ;;; <summary>
+    ;;; Using this alternate ExternalContextPool disables the reuse of contexts within a Traditional
+    ;;; Bridge context pool in LOCAL environments. This should only be used as a last resort, in
+    ;;; stateful environments where connections cannot be reused. Disabling pooling will negatively
+    ;;; impact performance and scalability of the traditional bridge environment.
+    ;;; </summary>
+    public class BridgeNoContextReuseLocal<T(IContextBase, class)> extends ExternalContextPool<T>
+
+        public method BridgeNoContextReuseLocal
+            targetExe, string
+            targetArguments, string
+            targetDirectory, string
+            environmentVariables, @IEnumerable<KeyValuePair<string,string>>
+            minPoolSize, int
+            maxPoolSize, int
+            maxPoolWait, TimeSpan
+            debugMode, boolean
+            endparams
+            parent(targetExe, targetArguments, targetDirectory, environmentVariables, minPoolSize, maxPoolSize, maxPoolWait, debugMode)
+        proc
+        endmethod
+
+        ;;; <summary>
+        ;;; Ensure that used contexts are not returned to the pool.
+        ;;; </summary>
+        ;;; <param name="context">The context being returned to the pool.</param>
+        public override async method ReturnContext, void
+            context, T
+        proc
+            data pooledContext = ^as(context, @IPooledContextBase)
+            pooledContext?.Destroy()
+        endmethod
+
+    endclass
+
+endnamespace

@@ -1,0 +1,678 @@
+;;*****************************************************************************
+;;
+;; Title:       StartupCustom.dbl
+;;
+;; Description: Custom startup class methods
+;;
+;;*****************************************************************************
+;; THIS CODE WAS HAND CRAFTED
+;;*****************************************************************************
+
+import Harmony.AspNetCore
+import Harmony.AspNetCore.Context
+
+import Harmony.Core
+import Harmony.Core.Context
+import Harmony.Core.FileIO
+import Harmony.Core.Interface
+import Harmony.Core.Utility
+
+import Harmony.OData
+import Harmony.OData.Adapter
+
+import IdentityModel.AspNetCore
+import IdentityModel.AspNetCore.AccessTokenManagement
+import IdentityModel.Client
+
+import Microsoft.AspNetCore.Builder
+import Microsoft.Extensions.DependencyInjection
+import Microsoft.AspNetCore.Hosting
+import Microsoft.AspNetCore.Http
+import Microsoft.AspNetCore.Http.Extensions
+import Microsoft.AspNetCore.Mvc
+import Microsoft.AspNetCore.Mvc.Abstractions
+import Microsoft.AspNetCore.Mvc.ApiExplorer
+import Microsoft.AspNetCore.Mvc.ApplicationModels
+import Microsoft.AspNetCore.OData
+import Microsoft.AspNetCore.OData.Extensions
+import Microsoft.AspNetCore.OData.Formatter
+import Microsoft.AspNetCore.OData.Routing
+import Microsoft.AspNetCore.Routing
+import Microsoft.AspNetCore.StaticFiles
+
+import Microsoft.EntityFrameworkCore
+import Microsoft.Extensions.Configuration
+import Microsoft.Extensions.DependencyInjection
+import Microsoft.Extensions.DependencyInjection.Extensions
+import Microsoft.Extensions.Logging
+import Microsoft.Extensions.Options
+import Microsoft.Extensions.Primitives
+
+import Microsoft.Net.Http.Headers
+
+import Microsoft.OData
+import Microsoft.OData.Edm
+import Microsoft.OData.UriParser
+
+import Microsoft.OpenApi.Models
+
+import OpenTelemetry
+import OpenTelemetry.Exporter
+import OpenTelemetry.Instrumentation.AspNetCore
+import OpenTelemetry.Logs
+import OpenTelemetry.Metrics
+import OpenTelemetry.Resources
+import OpenTelemetry.Trace
+
+import Renci.SshNet
+
+import Services.Controllers
+import Services.Filters
+import Services.Models
+import Services.Temp
+
+import System
+import System.Collections.Generic
+import System.Diagnostics
+import System.IO
+import System.Linq
+import System.Runtime.InteropServices
+import System.Text
+import System.Threading.Tasks
+
+import Swashbuckle.AspNetCore.Swagger
+
+namespace Services
+
+    ;Do not add a doc comment here!
+    public partial class Startup
+
+        private bridgeMode,         string
+        private bridgeOS,           RemoteTargetOS
+        private bridgeServer,       String
+        private bridgeUser,         String
+        private bridgePassword,     String
+        private bridgeCryptoKey,    String
+        private bridgeLogLevel,     String
+        private startCommand,       String
+        private poolContextReuse,   boolean
+        private poolMinSize,        int
+        private poolMaxSize,        int
+        private poolMaxWait,        int
+        private connectTimeout,     int
+        private callTimeout,        int
+        private usePassword,        boolean
+
+        ;Do not add a doc comment here!
+        partial method ConfigureServicesCustom, void
+            services, @IServiceCollection
+        proc
+            ;;---------------------------------------------------------------------
+            ;; Load settings from the appsettings files
+
+            data environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+
+            if (String.IsNullOrWhiteSpace(environmentName))
+            begin
+                Console.WriteLine("ERROR: Can't determine configuration because ASPNETCORE_ENVIRONMENT is not defined!")
+                mreturn
+            end
+
+            data settings, @AppSettings
+
+            try
+            begin
+                settings = _config.GetSection("AppSettings").Get<AppSettings>()
+
+                if (settings==^null)
+                begin
+                    Console.WriteLine("ERROR: AppSettings not found! Check ASPNETCORE_ENVIRONMENT, your appsettings.json files, and that they are copied to the output directory!")
+                    mreturn
+                end
+
+                settings.ProcessEnvironmentVariables()
+            end
+            catch (e, @Exception)
+            begin
+                Console.WriteLine("ERROR: Failed to load AppSettings! Check the syntax and values in your appsettings.json file(s).")
+                mreturn
+            end
+            endtry
+
+            ;;---------------------------------------------------------------------
+            ;; Register our custom FileSpecResolver class
+
+            ;services.AddSingleton<IFileChannelManager,FileSpecResolver>()
+
+            ;; ------------------------------------------------------------------------------------
+            ;; Configure Traditional Bridge
+
+            if (settings.Bridge.Enabled)
+            begin
+                
+                ;; Check that IoBufferSize is a multiple of 4K
+
+                if((settings.Bridge.IoBufferSize .mod. 4096) != 0)
+                begin
+                    Console.WriteLine("WARNING: In AppSettings Bridge.IoBufferSize must be a multiple of 4096 bytes. Defaulting to 64k")
+                    settings.Bridge.IoBufferSize = 4096 * 16
+                end
+
+                ;; And establish the setting
+
+                Environment.SetEnvironmentVariable("HARMONYCORE_TBIOBUF",settings.Bridge.IoBufferSize.ToString())
+
+                ;; Local or remote?
+
+                using settings.Bridge.Mode select
+
+                (BridgeMode.Local),
+                begin
+                    data traditionalBridgeDirectory, string
+                    data startScript, String
+
+                    if (_env.IsDevelopment()) then
+                    begin
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) then
+                            traditionalBridgeDirectory = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(^typeof(Startup).Assembly.Location),"..\..\..\..\..\TraditionalBridge\EXE"))
+                        else
+                            traditionalBridgeDirectory = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(^typeof(Startup).Assembly.Location),"../../../../../TraditionalBridge/EXE"))
+                    end
+                    else
+                    begin
+                        traditionalBridgeDirectory = Path.GetFullPath(Path.GetDirectoryName(^typeof(Startup).Assembly.Location))
+                    end
+
+                    data startParameters, string
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) then
+                    begin
+                        startScript = "launch.bat"
+                        startParameters = String.Format("{0} {1}",settings.Bridge.SynergyBitsize,settings.Bridge.LogLevel)
+                    end
+                    else
+                    begin
+                        startScript = "launch"
+                        startParameters = settings.Bridge.LogLevel.ToString()
+                    end
+
+                    data startCommand = Path.Combine(traditionalBridgeDirectory,startScript)
+
+                    if (settings.Bridge.Debugger.Enabled) then
+                    begin
+                        startParameters = String.Format("{0} {1} {2} {3} {4} {5}",
+                        &    startParameters,
+                        &    settings.Bridge.Debugger.VisualStudioMode ? "VS" : "TELNET",
+                        &    settings.Bridge.Debugger.NetworkPort,
+                        &    settings.Bridge.Debugger.SecondsToWait,
+                        &    settings.Bridge.Debugger.StartupScript,
+                        &    settings.Bridge.StuckProcessSeconds)
+                    end
+                    else
+                    begin
+                        startParameters = String.Format("{0} NONE 0 0 NONE {1}",
+                        &    startParameters,
+                        &    settings.Bridge.StuckProcessSeconds)
+                    end
+
+                    Console.WriteLine("Traditional bridge configuration:")
+                    Console.WriteLine("  Configuration   : {0}", environmentName)
+                    Console.WriteLine("  Bridge mode     : LOCAL")
+                    Console.WriteLine("  Bridge directory: {0}", traditionalBridgeDirectory)
+                    Console.WriteLine("  Synergy bitsize : {0}", settings.Bridge.SynergyBitsize)
+                    Console.WriteLine("  Logging level   : {0}", settings.Bridge.LogLevel)
+                    Console.WriteLine("  Pool config     : Min {0}, max {1}, max wait {2}",settings.Bridge.PoolMinSize,settings.Bridge.PoolMaxSize,settings.Bridge.PoolMaxWait)
+                    Console.WriteLine("  Pool ctx reuse  : {0}", settings.Bridge.PoolContextReuse ? "ENABLED" : "DISABLED")
+                    Console.WriteLine("  I/O buffer size : {0}", settings.Bridge.IoBufferSize)
+                    Console.WriteLine("  Debugging       : {0}", settings.Bridge.Debugger.Enabled ? "ENABLED" : "DISABLED")
+                    if (settings.Bridge.Debugger.Enabled)
+                    begin
+                        Console.WriteLine("  Debug port      : {0}", settings.Bridge.Debugger.NetworkPort)
+                        Console.WriteLine("  Debug delay     : {0}", settings.Bridge.Debugger.SecondsToWait)
+                        Console.WriteLine("  Debug mode      : {0}", settings.Bridge.Debugger.VisualStudioMode ? "Visual Studio" : "Telnet")
+                        Console.WriteLine("  Startup Script  : {0}", settings.Bridge.Debugger.StartupScript)
+                    end
+
+                    if (settings.Bridge.StuckProcessSeconds > 0) then
+                        Console.WriteLine("  Detect stuck prc: ENABLED {0} seconds", settings.Bridge.StuckProcessSeconds)
+                    else
+                        Console.WriteLine("  Detect stuck prc: DISABLED")
+
+                    Console.WriteLine("  Start command   : {0} {1}", startScript, startParameters)
+                    Console.WriteLine("  Test on startup : {0}", settings.Bridge.TestOnStartup ? "ENABLED" : "DISABLED")
+                    Console.WriteLine("")
+
+                    if (settings.Bridge.PoolContextReuse) then
+                    begin
+                        ;; ----------------------------------------------------------------------------
+                        ;; Local pooled connection
+                        ;;
+                        ;;data context = new MyExternalContextPool<BridgeAPIService>
+                        data contextPoolType, @Type, ^typeof(MyExternalContextPool<>)
+                        data contextPoolRealType = contextPoolType.MakeGenericType(^typeof(BridgeAPIService))
+                        data waitTimeSpan = new TimeSpan(0,0,settings.Bridge.PoolMaxWait)
+                        data contextPoolConstructorArguments = new Object[#]
+                        &    {
+                        &    (@object)startCommand,
+                        &    (@object)startParameters,
+                        &    (@object)traditionalBridgeDirectory,
+                        &    ^null,
+                        &    (@object)settings.Bridge.PoolMinSize,
+                        &    (@object)settings.Bridge.PoolMaxSize,
+                        &    (@object)waitTimeSpan,
+                        &    (@object)false
+                        &    }
+                        data madeInstance = Activator.CreateInstance(contextPoolRealType, contextPoolConstructorArguments)
+                        ;;Add DI service
+                        services.AddSingleton<IContextFactory<BridgeAPIService>>(^as(madeInstance,IContextFactory<BridgeAPIService>) )
+                    end
+                    else
+                    begin
+                        ;; ----------------------------------------------------------------------------
+                        ;; Local non-pooled connection
+                        ;;
+                        data context = new BridgeNoContextReuseLocal<BridgeAPIService>
+                        &    (
+                        &    startCommand,
+                        &    startParameters,
+                        &    traditionalBridgeDirectory,
+                        &    ^null,
+                        &    settings.Bridge.PoolMinSize,
+                        &    settings.Bridge.PoolMaxSize,
+                        &    new TimeSpan(0,0,settings.Bridge.PoolMaxWait),
+                        &    false
+                        &    )
+
+                        ;;Add DI service
+                        services.AddSingleton<IContextFactory<BridgeAPIService>>(context)
+                    end
+                end
+
+                (BridgeMode.Remote),
+                begin
+                    data bridgeOS, RemoteTargetOS
+                    data startCommand, string
+                    data startParameters, string
+
+                    using settings.Bridge.Server.OS select
+                    (ServerOS.Windows),
+                    begin
+                        bridgeOS = RemoteTargetOS.Windows
+                        startCommand = "launch.bat"
+                        startParameters = String.Format("{0} {1}",settings.Bridge.SynergyBitsize,settings.Bridge.LogLevel)
+                    end
+                    (ServerOS.Linux),
+                    begin
+                        bridgeOS = RemoteTargetOS.Linux
+                        startCommand = "launch"
+                        startParameters = String.Format("{0}",settings.Bridge.LogLevel)
+                    end
+                    (ServerOS.Unix),
+                    begin
+                        bridgeOS = RemoteTargetOS.Unix
+                        startCommand = "launch"
+                        startParameters = String.Format("{0}",settings.Bridge.LogLevel)
+                    end
+                    (ServerOS.VMS),
+                    begin
+                        bridgeOS = RemoteTargetOS.VMS
+                        startCommand = "launch.com"
+                        startParameters = String.Format("{0}",settings.Bridge.LogLevel)
+                    end
+                    endusing
+
+                    if (settings.Bridge.Debugger.Enabled)
+                    begin
+                        startParameters = String.Format("{0} {1} {2} {3} {4}",
+                        &    startParameters,
+                        &    settings.Bridge.Debugger.VisualStudioMode ? "VS" : "TELNET",
+                        &    settings.Bridge.Debugger.NetworkPort,
+                        &    settings.Bridge.Debugger.SecondsToWait,
+                        &    settings.Bridge.Debugger.StartupScript )
+                    end
+
+                    Console.WriteLine("Traditional bridge configuration:")
+                    Console.WriteLine("  Configuration   : {0}", environmentName)
+                    Console.WriteLine("  Bridge mode     : REMOTE")
+                    Console.WriteLine("  Server          : {0}", settings.Bridge.Server.ServerNameOrIP)
+                    Console.WriteLine("  Server O/S      : {0}", settings.Bridge.Server.OS.ToString())
+                    Console.WriteLine("  Server account  : {0}", settings.Bridge.Server.Username)
+                    if (settings.Bridge.Server.OS == ServerOS.Windows)
+                    begin
+                        Console.WriteLine("  Synergy bitsize : {0}", settings.Bridge.SynergyBitsize)
+                    end
+                    Console.WriteLine("  Logging level   : {0}", settings.Bridge.LogLevel)
+                    Console.WriteLine("  Pool config     : Min {0}, max {1}, max wait {2}",settings.Bridge.PoolMinSize,settings.Bridge.PoolMaxSize,settings.Bridge.PoolMaxWait)
+                    Console.WriteLine("  Pool ctx reuse  : {0}", settings.Bridge.PoolContextReuse ? "ENABLED" : "DISABLED")
+                    Console.WriteLine("  I/O buffer size : {0}", settings.Bridge.IoBufferSize)
+                    Console.WriteLine("  Debugging       : {0}", settings.Bridge.Debugger.Enabled ? "ENABLED" : "DISABLED")
+                    if (settings.Bridge.Debugger.Enabled)
+                    begin
+                        Console.WriteLine("  Debug port      : {0}", settings.Bridge.Debugger.NetworkPort)
+                        Console.WriteLine("  Debug delay     : {0}", settings.Bridge.Debugger.SecondsToWait)
+                        Console.WriteLine("  Debug mode      : {0}", settings.Bridge.Debugger.VisualStudioMode ? "Visual Studio" : "Telnet")
+                        Console.WriteLine("  Debug mode      : {0}", settings.Bridge.Debugger.StartupScript)
+                    end
+                    Console.WriteLine("  Start command   : {0} {1}", startCommand, startParameters)
+                    Console.WriteLine("  Test on startup : {0}", settings.Bridge.TestOnStartup ? "ENABLED" : "DISABLED")
+                    Console.WriteLine("")
+
+                    if (settings.Bridge.PoolContextReuse) then
+                    begin
+                        data context, @RemoteExternalContextPool<BridgeAPIService>
+
+                        if (settings.Bridge.Server.AuthorizationMode == AuthorizationMode.Password) then
+                        begin
+                            ;; ----------------------------------------------------------------------------
+                            ;; Pooled connection authenticated via username and password
+                            ;;
+                            context = new RemoteExternalContextPool<BridgeAPIService>
+                            &    (
+                            &    bridgeOS,
+                            &    settings.Bridge.Server.ServerNameOrIP,
+                            &    settings.Bridge.Server.Username,
+                            &    new Renci.SshNet.PasswordAuthenticationMethod(settings.Bridge.Server.Username,settings.Bridge.Server.Password),
+                            &    String.Format("{0} {1}",startCommand,startParameters),
+                            &    settings.Bridge.PoolMinSize,
+                            &    settings.Bridge.PoolMaxSize,
+                            &    new TimeSpan(0,0,settings.Bridge.PoolMaxWait),
+                            &    settings.Bridge.Server.CallTimeout,
+                            &    settings.Bridge.Server.ConnectTimeout,
+                            &    false
+                            &    )
+                        end
+                        else
+                        begin
+                            ;; ----------------------------------------------------------------------------
+                            ;; Pooled connection authenticated via username and cryptographic key
+                            ;;
+                            data keyFiles = new PrivateKeyFile[#] { new PrivateKeyFile(settings.Bridge.Server.CryptoKey) }
+                            context = new RemoteExternalContextPool<BridgeAPIService>
+                            &    (
+                            &    bridgeOS,
+                            &    settings.Bridge.Server.ServerNameOrIP,
+                            &    settings.Bridge.Server.Username,
+                            &    new PrivateKeyAuthenticationMethod(settings.Bridge.Server.Username, keyFiles),
+                            &    String.Format("{0} {1}",startCommand,startParameters),
+                            &    settings.Bridge.PoolMinSize,
+                            &    settings.Bridge.PoolMaxSize,
+                            &    new TimeSpan(0,0,settings.Bridge.PoolMaxWait),
+                            &    settings.Bridge.Server.CallTimeout,
+                            &    settings.Bridge.Server.ConnectTimeout,
+                            &    false
+                            &    )
+                        end
+
+                        ;;Add DI service
+                        services.AddSingleton<IContextFactory<BridgeAPIService>>(context)
+                    end
+                    else
+                    begin
+                        ;;No pooling
+                        data context, @BridgeNoContextReuseRemote<BridgeAPIService>
+
+                        if (settings.Bridge.Server.AuthorizationMode == AuthorizationMode.Password) then
+                        begin
+                            ;; ----------------------------------------------------------------------------
+                            ;; Non-pooled connection authenticated via username and password
+                            ;;
+                            context = new BridgeNoContextReuseRemote<BridgeAPIService>
+                            &    (
+                            &    bridgeOS,
+                            &    settings.Bridge.Server.ServerNameOrIP,
+                            &    settings.Bridge.Server.Username,
+                            &    new Renci.SshNet.PasswordAuthenticationMethod(settings.Bridge.Server.Username,settings.Bridge.Server.Password),
+                            &    String.Format("{0} {1}",startCommand,startParameters),
+                            &    settings.Bridge.PoolMinSize,
+                            &    settings.Bridge.PoolMaxSize,
+                            &    new TimeSpan(0,0,settings.Bridge.PoolMaxWait),
+                            &    settings.Bridge.Server.CallTimeout,
+                            &    settings.Bridge.Server.ConnectTimeout,
+                            &    false)
+                        end
+                        else
+                        begin
+                            ;; ----------------------------------------------------------------------------
+                            ;; Non-pooled connection authenticated via username and cryptographic key
+                            ;;
+                            data keyFiles = new PrivateKeyFile[#] { new PrivateKeyFile(settings.Bridge.Server.CryptoKey) }
+                            context = new BridgeNoContextReuseRemote<BridgeAPIService>
+                            &    (
+                            &    bridgeOS,
+                            &    settings.Bridge.Server.ServerNameOrIP,
+                            &    settings.Bridge.Server.Username,
+                            &    new PrivateKeyAuthenticationMethod(settings.Bridge.Server.Username, keyFiles),
+                            &    String.Format("{0} {1}",startCommand,startParameters),
+                            &    settings.Bridge.PoolMinSize,
+                            &    settings.Bridge.PoolMaxSize,
+                            &    new TimeSpan(0,0,settings.Bridge.PoolMaxWait),
+                            &    settings.Bridge.Server.CallTimeout,
+                            &    settings.Bridge.Server.ConnectTimeout,
+                            &    false
+                            &    )
+                        end
+
+                        ;;Add DI service
+                        services.AddSingleton<IContextFactory<BridgeAPIService>>(context)
+                    end
+                end
+
+                endusing
+
+                ;;Add the traditional bridge services as DI services
+                services.AddContextPool<BridgeAPIService>()
+
+            end ;Bridge.Enabled
+
+            ;;------------------------------------------------------------------------
+            ;; If enabled, configure OpenTelemetry
+
+            if (settings.Telemetry.Enabled)
+            begin
+                data serviceName = settings.Telemetry.ServiceName
+                data serviceVersion = settings.Telemetry.ServiceVersion
+                data destination = settings.Telemetry.Destination
+
+                ;Console only telemetry logging?
+                if destination.Equals("CO") then
+                begin
+                    ;Log to the console only
+                    services.AddOpenTelemetry()
+                    &    .ConfigureResource(Lambda(resource) { resource.AddService(servicename,serviceversion) })
+                    &    .WithTracing(lambda(tracing) { tracing.AddSource(serviceName).AddAspNetCoreInstrumentation(instrumentationOptions).AddConsoleExporter() })
+                    &    .WithMetrics(lambda(metrics) { metrics.AddMeter(serviceName).AddAspNetCoreInstrumentation().AddConsoleExporter() })
+                    &    .Withlogging(lambda(options) { options.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName,serviceVersion)).AddConsoleExporter() })
+                end
+                else
+                begin
+                    ;The convention seems to be that the same endpoint addresses are always used for trace/metrics etc.
+                    ;It certainly works with otl collector and signoz so just adding them to the base address of the collector
+
+                    lambda otltraceoptions(options)
+                    begin
+                        options.Endpoint = new Uri(destination+"/traces")
+                        options.Protocol = OtlpExportProtocol.Grpc
+                    end
+
+                    lambda otlmetricoptions(options)
+                    begin
+                        options.Endpoint = new Uri(destination+"/metrics")
+                        options.Protocol = OtlpExportProtocol.Grpc
+                    end
+
+                    lambda otllogoptions(options)
+                    begin
+                        options.Endpoint = new Uri(destination+"/logs")
+                        options.Protocol = OtlpExportProtocol.Grpc
+                    end
+
+                    services.AddOpenTelemetry()
+                    &    .ConfigureResource(Lambda(resource) { resource.AddService(servicename,serviceversion) })
+                    &    .WithTracing(lambda(tracing) { tracing.AddSource(serviceName).AddAspNetCoreInstrumentation(instrumentationOptions).AddOtlpExporter(otltraceoptions) })
+                    &    .WithMetrics(lambda(metrics) { metrics.AddMeter(serviceName).AddAspNetCoreInstrumentation().AddOtlpExporter(otlmetricoptions) })
+                    &    .Withlogging(lambda(options) { options.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName,serviceVersion)).AddOtlpExporter(otllogoptions) })
+                end
+            end
+
+            ;;------------------------------------------------------------------------
+            ;; Expose the application settings as a service
+
+            services.AddSingleton<IOptions<AppSettings>>(settings)
+
+            ;;------------------------------------------------------------------------
+            ;; Enable "SignalR" support
+
+            ;services.AddSignalR()
+
+        endmethod
+
+        ;;; <summary>
+        ;;; OpenTelemetry configuration method (see above)
+        ;;; </summary>
+        private method activityOptions, void
+            in act, @Activity
+            in request, @HttpRequest
+        proc
+            act.SetTag("http.url", request.GetDisplayUrl())
+        endmethod
+
+        ;;; <summary>
+        ;;; OpenTelemetry configuration method (see above)
+        ;;; </summary>
+        private method instrumentationOptions, void
+            in opts, @AspNetCoreTraceInstrumentationOptions
+        proc
+            opts.EnrichWithHttpRequest = activityOptions
+        endmethod
+
+        ;Do not add a doc comment here!
+        partial method ConfigureCustom, void
+            required in app, @IApplicationBuilder
+            required in env, @IHostingEnvironment
+        proc
+
+            data settings = _config.GetSection("AppSettings").Get<AppSettings>()
+
+            ;;------------------------------------------------------------------------
+            ;; If you need to call a traditional bridge method during startup, this is
+            ;; a good place to do so. Here is an example!
+
+            if (settings.Bridge.TestOnStartup)
+            begin
+                ;; Get an instance of the traditional bridge service
+                data factory = (IContextFactory<BridgeAPIService>)app.ApplicationServices.GetService(^typeof(IContextFactory<BridgeAPIService>))
+                data services = new List<BridgeAPIService>()
+                data servicesIx = 0
+                data envstring = String.Empty
+
+                Console.Write(String.Format("Testing traditional bridge configuration (pool size {0}): ",settings.Bridge.PoolMaxSize))
+
+                try
+                begin
+                    for servicesIx from 0 thru settings.Bridge.PoolMaxSize -1
+                    begin
+                        services.Add(factory.MakeContextAsync(app.ApplicationServices).Result)
+
+                        Console.Write(String.Format("{0}.",%string(servicesIx + 1)))
+                        data responseTask, @Task<BridgeAPI.GetEnvironment_Response>
+                        ;; Call the method and wait for the async call to complete
+                        responseTask = services[servicesIx].GetEnvironment()
+                        responseTask.Wait()
+                        ;; Extract the response
+                        if (String.IsNullOrWhiteSpace(envstring))
+                        begin
+                            envstring = responseTask.Result.EnvironmentString
+                        end
+                    end
+                    Console.WriteLine(" DONE")
+                    Console.WriteLine(String.Format("Traditional Synergy environment is {0}",envstring))
+                end
+                catch (e, @Exception)
+                begin
+                    Console.WriteLine(" FAILED!")
+                    Console.WriteLine("Error was {0}",e.Message)
+                end
+                finally
+                begin
+                    ;; Return the service instance to the pool for re-use
+                    for servicesIx from 0 thru services.Count -1
+                    begin
+                        factory.ReturnContext(services[servicesIx])
+                    end
+                end
+                endtry
+
+                Console.WriteLine("")
+
+            end
+
+            ;;------------------------------------------------------------------------
+            ;; Enable SignalR
+
+;            lambda mapRoutes(route)
+;            begin
+;                route.MapHub<aspHub>(new PathString("/hub/asp"))
+;            end
+;
+;            app.UseSignalR(mapRoutes)
+
+        endmethod
+
+;        ;Do not add a doc comment here!
+;        partial method ConfigureCustomBeforeMvc, void
+;            required in app, @IApplicationBuilder
+;            required in env, @IHostingEnvironment
+;        proc
+;            app.UseMultiTenancy(GetTenantId)
+;        endmethod
+
+;        ;;; <summary>
+;        ;;;
+;        ;;; </summary>
+;        ;;; <param name="context"></param>
+;        ;;; <returns></returns>
+;        private method GetTenantId, string
+;            required in context, @HttpContext
+;        proc
+;            ; Do we have a JWT?
+;            data identity = ^as(context.User.Identity,System.Security.Claims.ClaimsIdentity)
+;            data defaultBranch = identity?.FindFirst("DefaultBranch")?.Value
+;            data authorizedBranches = identity?.FindFirst("AuthorizedBranches")?.Value
+;
+;            ;;Do we have an x-tenant-id header?
+;            data xTenantId, string
+;            data xTenantIdValues, StringValues
+;            if(context.Request.Headers.TryGetValue("X-TENANT-ID", xTenantIdValues) && xTenantIdValues.Count == 1)
+;            begin
+;                xTenantId = xTenantIdValues.ToArray().First().ToUpper()
+;            end
+;
+;            ;;If we have x-tenant-id and it specifies an environment the user has access to, use it.
+;            if (!String.IsNullOrWhiteSpace(xTenantId)
+;            &    && !String.IsNullOrWhiteSpace(defaultBranch)
+;            &    && !String.IsNullOrWhiteSpace(authorizedBranches)
+;            &    && String.Format(",{0},",authorizedBranches).Contains(String.Format(",{0},",xTenantId))) then
+;            begin
+;                mreturn xTenantId
+;            end
+;            else if (!String.IsNullOrWhiteSpace(defaultBranch))
+;            begin
+;                ;;Otherwise, use the users default company
+;                mreturn defaultBranch
+;            end
+;
+;            mreturn ^null
+;
+;        endmethod
+
+        ;Do not add a doc comment here!
+        partial method MvcConfigCustom, void
+            options, @MvcOptions
+        proc
+            ;options.Filters.Add(^typeof(TenantValidationFilter))
+            options.ValidateComplexTypesIfChildValidationFails = true
+            options.Filters.Add(^typeof(ModelStateValidationFilter))
+        endmethod
+
+    endclass
+
+endnamespace

@@ -1,0 +1,876 @@
+{
+    "info": {
+        "_postman_id": "3efc60d1-7fb2-4a4a-a466-2ba6f69ebe7d",
+        "name": "TireMax Web Services (OData)",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Customers Tests",
+            "item": [
+                {
+                    "name": "Read customers",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "x-tenant-id",
+                                "value": "{{TenantID}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Customers?$top=3",
+                            "host": [
+                                "{{ServerBaseUri}}"
+                            ],
+                            "path": [
+                                "{{ODataPath}}",
+                                "v{{ApiVersion}}",
+                                "Customers"
+                            ],
+                            "query": [
+                                {
+                                    "key": "$top",
+                                    "value": "3"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read customers",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                        "key": "Accept",
+                        "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Customers(CustomerNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Customers(CustomerNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read customers by State",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Customers(State='ABC')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Customers(State='ABC')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read customers by Zip",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Customers(ZipCode=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Customers(ZipCode=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read customers by PaymentTerms",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Customers(PaymentTermsCode='ABC')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Customers(PaymentTermsCode='ABC')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Items Tests",
+            "item": [
+                {
+                    "name": "Read items",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "x-tenant-id",
+                                "value": "{{TenantID}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Items?$top=3",
+                            "host": [
+                                "{{ServerBaseUri}}"
+                            ],
+                            "path": [
+                                "{{ODataPath}}",
+                                "v{{ApiVersion}}",
+                                "Items"
+                            ],
+                            "query": [
+                                {
+                                    "key": "$top",
+                                    "value": "3"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read items",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                        "key": "Accept",
+                        "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Items(ItemNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Items(ItemNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read items by VendorNumber",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Items(VendorNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Items(VendorNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read items by Color",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Items(FlowerColor='ABC')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Items(FlowerColor='ABC')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read items by Size",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Items(Size=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Items(Size=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read items by Name",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Items(CommonName='ABC')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Items(CommonName='ABC')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Orders Tests",
+            "item": [
+                {
+                    "name": "Read orders",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "x-tenant-id",
+                                "value": "{{TenantID}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Orders?$top=3",
+                            "host": [
+                                "{{ServerBaseUri}}"
+                            ],
+                            "path": [
+                                "{{ODataPath}}",
+                                "v{{ApiVersion}}",
+                                "Orders"
+                            ],
+                            "query": [
+                                {
+                                    "key": "$top",
+                                    "value": "3"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orders",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                        "key": "Accept",
+                        "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Orders(OrderNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Orders(OrderNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orders by CustomerNumber",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Orders(CustomerNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Orders(CustomerNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orders by DateOrdered",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Orders(DateOrdered='2022-01-01')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Orders(DateOrdered='2022-01-01')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orders by DateCompleted",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Orders(DateCompleted='2022-01-01')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Orders(DateCompleted='2022-01-01')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "OrderItems Tests",
+            "item": [
+                {
+                    "name": "Read orderItems",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "x-tenant-id",
+                                "value": "{{TenantID}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/OrderItems?$top=3",
+                            "host": [
+                                "{{ServerBaseUri}}"
+                            ],
+                            "path": [
+                                "{{ODataPath}}",
+                                "v{{ApiVersion}}",
+                                "OrderItems"
+                            ],
+                            "query": [
+                                {
+                                    "key": "$top",
+                                    "value": "3"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orderItems",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                        "key": "Accept",
+                        "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/OrderItems(OrderNumber=123,ItemNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "OrderItems(OrderNumber=123,ItemNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orderItems by ItemOrdered",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/OrderItems(ItemOrdered=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "OrderItems(ItemOrdered=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orderItems by DateShipped",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/OrderItems(DateShipped='2022-01-01')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "OrderItems(DateShipped='2022-01-01')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read orderItems by InvoiceNumber",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/OrderItems(InvoiceNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "OrderItems(InvoiceNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Vendors Tests",
+            "item": [
+                {
+                    "name": "Read vendors",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "x-tenant-id",
+                                "value": "{{TenantID}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Vendors?$top=3",
+                            "host": [
+                                "{{ServerBaseUri}}"
+                            ],
+                            "path": [
+                                "{{ODataPath}}",
+                                "v{{ApiVersion}}",
+                                "Vendors"
+                            ],
+                            "query": [
+                                {
+                                    "key": "$top",
+                                    "value": "3"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read vendors",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                        "key": "Accept",
+                        "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Vendors(VendorNumber=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Vendors(VendorNumber=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read vendors by State",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Vendors(State='ABC')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Vendors(State='ABC')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read vendors by Zip",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Vendors(ZipCode=123)",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Vendors(ZipCode=123)"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+                ,
+                {
+                    "name": "Read vendors by PaymentTerms",
+                    "request": {
+                    "method": "GET",
+                    "header": [
+                        {
+                            "key": "Accept",
+                            "value": "application/json"
+                        },
+                        {
+                            "key": "x-tenant-id",
+                            "value": "{{TenantID}}",
+                            "type": "text"
+                        }
+                    ],
+                    "url": {
+                        "raw": "{{ServerBaseUri}}/{{ODataPath}}/v{{ApiVersion}}/Vendors(PaymentTermsCode='ABC')",
+                        "host": [
+                            "{{ServerBaseUri}}"
+                        ],
+                        "path": [
+                            "{{ODataPath}}",
+                            "v{{ApiVersion}}",
+                            "Vendors(PaymentTermsCode='ABC')"
+                        ]
+                    }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "TenantID",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "ServerBaseUri",
+            "value": "https://localhost:8086/odata/v1",
+            "type": "string"
+        },
+        {
+            "key": "ServerAuthUri",
+            "value": "https://localhost:8086/Authentication/GetToken",
+            "type": "string"
+        }
+    ]
+}

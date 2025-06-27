@@ -1,0 +1,95 @@
+;;**********************************************************************
+;;
+;; Title:       TwoDecimalPlacesConverter.dbl
+;;
+;; Type:        Class
+;;
+;;*****************************************************************************
+
+import Harmony.Core.Converters
+import System
+import System.Text.RegularExpressions
+
+namespace Harmony.Core.Converters
+
+    ;;; <summary>
+    ;;; Convert between a decimal field and an implied decimal field with two decimal places.
+    ;;; </summary>
+    public static class MaybeTwoDecimalPlacesConverter
+
+        ;;; <summary>
+        ;;; Maybe convert a decimal value to an implied decimal value with two decimal places.
+        ;;; </summary>
+        ;;; <param name="decimalValue">Decimal value to convert.</param>
+        ;;; <param name="hasTwoDecimalPlaces">An A1 where Y means the value should have 2 decimal places.</param>
+        ;;; <returns>Returns a .NET decimal representing the synergy decimal, maybe with two decimal places.</returns>
+        public static method Convert, decimal
+            decimalValue, d
+            hasTwoDecimalPlaces, string
+            stack record
+                tmpDec, d28
+            endrecord
+        proc
+            onerror ($ERR_DIGIT) badval
+            mreturn hasTwoDecimalPlaces.Trim().ToUpper().Equals("Y") ? decimalValue / 100.0 : decimalValue
+badval,     offerror
+            mreturn 0
+        endmethod
+
+        ;;; <summary>
+        ;;; Maybe convert a .NET decimal value which may have two decimal places to a synergy decimal.
+        ;;; </summary>
+        ;;; <param name="decimalValue">Decimal value to convert.</param>
+        ;;; <param name="hasTwoDecimalPlaces">An A1 where Y means the inbound value has 2 decimal places.</param>
+        ;;; <returns>Returns synergy decimal.</returns>
+        public static method ConvertBack, d
+            impliedDecimalValue, decimal
+            hasTwoDecimalPlaces, string
+        proc
+            throw new NotImplementedException("MaybeTwoDecimalPlacesConverter.ConvertBack is not implemented!")
+            ;mreturn hasTwoDecimalPlaces.Trim().ToUpper().Equals("Y") ? decimalValue * 100 : decimalValue
+        endmethod
+
+        ;;; <summary>
+        ;;; Convert from the publicly exposed value back to the storage value.
+        ;;; </summary>
+        public class LiteralFormatter implements ILiteralFormatter
+
+            public virtual method FormatLiteral, string
+                inputLiteral, string
+            proc
+                ;There is no great solution here, because for inbound data there is no way of knowing whether
+                ;the value SHOULD have 0 or 2 decimal places. So, this is what we're going with:
+                ;If the value received has no . then we treat it as no decimal places
+                ;If the value received contains a . then there should be exactly one or two digits to right;
+                ;Anything else will cause an error to be thrown.
+                if (inputLiteral.Contains(".")) then
+                begin
+                    if (Regex.IsMatch(inputLiteral,"^\d+\.\d{1,2}$")) then
+                    begin
+                        mreturn decimal.Parse(inputLiteral).ToString("F2")
+                    end
+                    else
+                    begin
+                        throw new ApplicationException("Invalid value passed to MaybeTwoDecimalPlacesConverter.LiteralFormatter.FormatLiteral()")
+                    end
+                end
+                else
+                begin
+                    data tmpval, long
+                    if (long.TryParse(inputLiteral,tmpval)) then
+                    begin
+                        mreturn Convert.ToString(tmpval)
+                    end
+                    else
+                    begin
+                        throw new ApplicationException("Invalid value passed to MaybeTwoDecimalPlacesConverter.LiteralFormatter.FormatLiteral()")
+                    end
+                end
+            endmethod
+
+        endclass
+
+    endclass
+
+endnamespace

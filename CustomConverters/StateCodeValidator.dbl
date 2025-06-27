@@ -1,0 +1,34 @@
+
+;*******************************************************************************
+;
+; Title:    StateCodeValidator.dbl
+;
+; Type:     Custom validation class
+;
+; Author:   Steve Ives, Synergex Professional Services Group
+;           20th March 2024
+;
+;*******************************************************************************
+
+import System
+import System.ComponentModel.DataAnnotations
+import System.Text.RegularExpressions
+
+namespace Harmony.Core.Converters
+
+    sealed public class StateCodeValidator extends ValidationAttribute
+
+        public override method IsValid, boolean
+            required in value, @object
+            literal
+                pattern, a*, "^(?:AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)$"
+            endliteral
+        proc
+            data stringValue = (string)value
+            data rx = new Regex((string)pattern,RegexOptions.IgnoreCase)
+            mreturn rx.IsMatch(stringValue)
+        endmethod
+
+    endclass
+
+endnamespace

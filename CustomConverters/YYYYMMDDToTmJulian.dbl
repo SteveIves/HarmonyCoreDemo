@@ -1,0 +1,32 @@
+
+;;; <summary>
+;;; Converts a YYYYMMDD date to a TireMax "julian" date
+;;; </summary>
+;;; <param name="yyyymmdd">yyyymmdd date to convert</param>
+;;; <returns>Returns a TireMax "julian" date or null if the data is invalid</returns>
+function YYYYMMDDTmJulian, a
+    required in group yyyymmdd, d
+        yyyy,   d4
+        mm,     d2
+        dd,     d2
+    endgroup
+    static record
+        baseDate,   i4
+    endrecord
+    stack record
+        tmDate,     d6
+    endrecord
+proc
+    if (!baseDate)
+        baseDate = %jperiod(19000101)
+
+    if (yyyymmdd<=0) then
+        freturn %char(0)
+    else
+    begin
+        tmDate = %jperiod(yyyymmdd) - baseDate + 1
+        freturn %string(tmDate,"XXXXXX")
+    end
+
+endfunction
+

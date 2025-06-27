@@ -1,0 +1,90 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)Common.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Configuration)' == '' ">linux64</Platform>
+    <Name>TraditionalBridge</Name>
+    <StartupObject>&lt;Synergy Main&gt;</StartupObject>
+    <OutputName>host</OutputName>
+    <ProjectGuid>{fbf1cd67-25d5-4aff-995e-a9373e9d5dc5}</ProjectGuid>
+    <ProjectTypeGuids>{7B8CF543-378A-4EC1-BB1B-98E4DC6E6820};{BBD0F5D1-1CC4-42fd-BA4C-A96779C64378}</ProjectTypeGuids>
+    <OutputType>application</OutputType>
+    <DBL_qTrim>True</DBL_qTrim>
+    <DBL_qAlign>True</DBL_qAlign>
+    <EnableCommonProperties>True</EnableCommonProperties>
+    <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
+    <RootNamespace>TraditionalBridge</RootNamespace>
+    <DBL_qRelaxed>True</DBL_qRelaxed>
+    <DBL_qRelaxedParamst>True</DBL_qRelaxedParamst>
+    <IncludeDebugInformation>False</IncludeDebugInformation>
+    <DBL_DisWarnOptCheck>True</DBL_DisWarnOptCheck>
+    <DBL_DisWarnOpt>316,788,934</DBL_DisWarnOpt>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|linux64' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <UnevaluatedOutputPath>UT:</UnevaluatedOutputPath>
+    <PlatformTarget>linux64</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Debug</DebugOptimize>
+    <OutputPath>bin\linux64\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|linux64' ">
+    <IncludeDebugInformation>False</IncludeDebugInformation>
+    <UnevaluatedOutputPath>UT:</UnevaluatedOutputPath>
+    <PlatformTarget>linux64</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Optimize</DebugOptimize>
+    <OutputPath>bin\linux64\Release\</OutputPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="proto\" />
+    <Folder Include="smc\" />
+    <Folder Include="source\" />
+    <Folder Include="source\bridge\" />
+    <Folder Include="source\dispatchers\" />
+    <Folder Include="source\helpers" />
+    <Folder Include="source\methods" />
+    <Folder Include="source\models\" />
+    <Folder Include="source\stubs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="source\dispatchers\BridgeAPIDispatcher.dbl" />
+    <Compile Include="source\dispatchers\BridgeAPIDispatcherCustom.dbl" />
+    <Compile Include="source\dispatchers\BridgeAPIMethodDispatchers.dbl" />
+    <Compile Include="source\helpers\CheckOpenChannels.dbl" />
+    <Compile Include="source\helpers\StuckProcessTracking.dbl" />
+    <Compile Include="source\host.dbl" />
+    <Compile Include="source\bridge\*.dbl" />
+    <Compile Include="source\dispatchers\MethodDispatcher.dbl" />
+    <Compile Include="source\methods\GetCustomer.dbl" />
+    <Compile Include="source\methods\GetEnvironment.dbl" />
+    <Compile Include="source\methods\GetLogicalName.dbl" />
+    <Compile Include="source\methods\LoremIpsum.dbl" />
+    <Compile Include="source\methods\StuckProcessTest.dbl" />
+    <Compile Include="source\models\Customers.dbl" />
+    <Compile Include="source\models\CustomersMetaData.dbl" />
+    <None Include="source\stubs\BridgeAPIMethodStubs.dbl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="launch">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="launch.bat">
+      <SubType>Content</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="proto\.gitignore">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="smc\MethodDefinitions.xml">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+</Project>

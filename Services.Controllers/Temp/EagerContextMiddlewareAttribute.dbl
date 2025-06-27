@@ -1,0 +1,99 @@
+
+import System
+import System.Collections.Generic
+import System.Text
+import Harmony.Core.Context
+import System.Threading.Tasks
+import Microsoft.AspNetCore.Builder
+import Microsoft.AspNetCore.Http
+import Microsoft.Extensions.DependencyInjection
+import Microsoft.AspNetCore.Mvc.Filters
+
+namespace Services.Controllers.Temp
+
+    public class EagerContextMiddlewareAttribute extends Attribute implements IAsyncResourceFilter
+
+        public ContextType, @Type
+
+        public method EagerContextMiddlewareAttribute
+            contextType, @Type
+        proc
+            this.ContextType = contextType
+        endmethod
+
+        public method OnResourceExecutionAsync, @Task 
+            context, @ResourceExecutingContext 
+            next, @ResourceExecutionDelegate 
+        proc
+            data internalMiddleware = ^typeof(EagerContextMiddlewareInternal<>).MakeGenericType(ContextType)
+            data innerFilter = ^as(Activator.CreateInstance(internalMiddleware), @IAsyncResourceFilter)
+            mreturn innerFilter.OnResourceExecutionAsync(context, next)
+        endmethod
+
+    endclass
+
+    public class EagerContextMiddlewareInternal<T(IContextBase, class)> implements IAsyncResourceFilter
+        public async method OnResourceExecutionAsync, @Task 
+            context, @ResourceExecutingContext 
+            next, @ResourceExecutionDelegate 
+        proc
+            ;data factory = context.HttpContext.RequestServices.GetService<IContextFactory<T>>()
+            data factory = (IContextFactory<T>)context.HttpContext.RequestServices.GetService(^typeof(IContextFactory<T>))
+
+            data contextFactoryProvider, @ContextFactoryServiceProvider<T>
+            contextFactoryProvider = new ContextFactoryServiceProvider<T>() { InnerProvider = context.HttpContext.RequestServices, Context = context.HttpContext, Factory = factory }
+
+            data madeContext = await Factory.MakeContextAsync(contextFactoryProvider.InnerProvider)
+            contextFactoryProvider.Value = madeContext
+
+            try
+            begin
+                context.HttpContext.RequestServices = contextFactoryProvider
+                await next()
+            end
+            finally
+            begin
+                ;;reset the request services to the original provider
+                context.HttpContext.RequestServices = contextFactoryProvider.InnerProvider
+                if(contextFactoryProvider.Context != ^null && contextFactoryProvider.Value != ^null)
+                begin
+                    Factory.ReturnContext(contextFactoryProvider.Value)
+                end
+            end
+            endtry
+
+        endmethod
+    endclass
+
+    public class ContextFactoryServiceProvider<T(IContextBase, class)> implements IServiceProvider, IDisposable
+        public InnerProvider, @IServiceProvider
+        public Context, @HttpContext
+        public Factory, @IContextFactory<T>
+        public SessionId, @string
+        public Value, T
+        public virtual method GetService, @object
+            serviceType, @Type 
+            endparams
+        proc
+            if(serviceType == ^typeof(T)) then
+            begin
+                if(Value == ^null)
+                    Value = Factory.MakeContext(this)
+                mreturn Value
+            end
+            else
+                mreturn InnerProvider.GetService(serviceType)
+        endmethod
+
+        public virtual method Dispose, void
+            endparams
+        proc
+            if(InnerProvider .is. IDisposable)
+                ((@IDisposable)InnerProvider).Dispose()
+            if(Value .is. IDisposable)
+                ((@IDisposable)Value).Dispose()
+        endmethod
+
+    endclass
+
+endnamespace

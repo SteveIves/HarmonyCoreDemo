@@ -1,0 +1,128 @@
+;;*****************************************************************************
+;;
+;; Title:       AppSettings.dbl
+;;
+;; Description: Represents the application settings as defined in appsettings.json
+;;
+;;*****************************************************************************
+
+import System
+import System.Collections.Generic
+import System.Text
+import Microsoft.Extensions.Options
+
+namespace Services.Models
+
+    public enum AuthorizationMode
+        Password
+        CryptoKey
+    endenum
+
+    public enum BridgeMode
+        Local
+        Remote
+    endenum
+
+    public enum ServerOS
+        Windows
+        Linux
+        Unix
+        VMS
+    endenum
+
+    public class BridgeSettings
+        public readwrite property Enabled, boolean, false
+        public readwrite property Mode, BridgeMode, BridgeMode.Local
+        public readwrite property LogLevel, int, -1
+        public readwrite property PoolContextReuse, boolean, true
+        public readwrite property PoolMinSize, int, 2
+        public readwrite property PoolMaxSize, int, 4
+        public readwrite property PoolMaxWait, int, 120
+        public readwrite property SynergyBitsize, int, 64
+        public readwrite property TestOnStartup, boolean, false
+        public readwrite property Server, @ServerSettings
+        public readwrite property Debugger, @DebugSettings, new DebugSettings()
+        public readwrite property IoBufferSize, int, 65536
+        public readwrite property StuckProcessSeconds, int
+    endclass
+
+    public class ServerSettings
+        public readwrite property OS, ServerOS, ServerOS.Windows
+        public readwrite property ServerNameOrIP, String, String.Empty
+        public readwrite property ConnectTimeout, int, 600000
+        public readwrite property CallTimeout, int, 100000
+        public readwrite property AuthorizationMode, AuthorizationMode, AuthorizationMode.Password
+        public readwrite property Username, String, String.Empty
+        public readwrite property Password, String, String.Empty
+        public readwrite property CryptoKey, String, String.Empty
+    endclass
+
+    public class DebugSettings
+        public readwrite property Enabled, boolean, false
+        public readwrite property VisualStudioMode, boolean, true
+        public readwrite property NetworkPort, int, 4444
+        public readwrite property SecondsToWait, int, 30
+        public readwrite property StartupScript, string, string.Empty
+    endclass
+
+    public class OpenTelemetrySettings
+        public readwrite property Enabled, boolean, false
+        public readwrite property Destination, string, string.Empty
+        public readwrite property ServiceName, string, string.Empty
+        public readwrite property ServiceVersion, string, string.Empty
+    endclass
+
+    ;;; <summary>
+    ;;; Application settings.
+    ;;; </summary>
+    public partial class AppSettings implements IOptions<AppSettings>
+
+.region "IOptions members"
+
+        public virtual property Value, @AppSettings
+            method get
+            proc
+                mreturn this
+            endmethod
+        endproperty
+
+.endregion
+
+        ;;; <summary>
+        ;;; A collection of environment variables as required at runtime by the application.
+        ;;; These environment variables will be established via the ProcessEnvironmentVariables
+        ;;; method below.
+        ;;; </summary>
+        public readwrite property EnvironmentVariables, @Dictionary<string,string>, new Dictionary<string, string>()
+
+        ;;; <summary>
+        ;;; Settings for the Traditional Bridge Environment
+        ;;; </summary>
+        public readwrite property Bridge, @BridgeSettings, new BridgeSettings()
+
+        ;;; <summary>
+        ;;; Settings for open telemetry
+        ;;; </summary>
+        public readwrite property Telemetry, @OpenTelemetrySettings, new OpenTelemetrySettings()
+
+        ;;; <summary>
+        ;;; This method is called by the AppSettingsMonitor to initially set the emvironment variables,
+        ;;; and also to reset the values of environment variables if the application configuration
+        ;;; changes.
+        ;;; </summary>
+        public method ProcessEnvironmentVariables, void
+        proc
+            if (EnvironmentVariables.Count > 0)
+            begin
+                data ev, @KeyValuePair<string,string>
+                foreach ev in EnvironmentVariables
+                begin
+                    data sts, int
+                    xcall setlog(ev.Key,ev.Value,sts)
+                end
+            end
+        endmethod
+
+    endclass
+
+endnamespace

@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="restore;Build">
+  <Import Project="$(SolutionDir)Common.props" />
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
+    <DefaultLanguageSourceExtension>.dbl</DefaultLanguageSourceExtension>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <Name>Services.Models</Name>
+    <ProjectGuid>{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}</ProjectGuid>
+    <EnableCommonProperties>True</EnableCommonProperties>
+    <Prefer32Bit>False</Prefer32Bit>
+    <DBL_qDisWarnOpt>316</DBL_qDisWarnOpt>
+    <DBLCmdOptions>-WD=316</DBLCmdOptions>
+    <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <UnevaluatedOutputPath>bin\$(Platform)\$(Configuration)</UnevaluatedOutputPath>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <DocumentationFile>bin\$(Platform)\$(Configuration)\Services.Models.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <UnevaluatedOutputPath>bin\$(Platform)\$(Configuration)</UnevaluatedOutputPath>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <DocumentationFile>bin\$(Platform)\$(Configuration)\Services.Models.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Harmony.Core">
+      <Version>8.0.76</Version>
+    </PackageReference>
+    <PackageReference Include="Harmony.Core.EF">
+      <Version>8.0.76</Version>
+    </PackageReference>
+    <PackageReference Include="Synergex.SynergyDE.Build">
+      <Version>24.9.2004</Version>
+    </PackageReference>
+    <PackageReference Include="Synergex.SynergyDE.synrnt">
+      <Version>12.4.1.1001</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppSettings.dbl" />
+    <Compile Include="BridgeAPIServiceModels.dbl" />
+    <Compile Include="Customers.dbl" />
+    <Compile Include="CustomersMetaData.dbl" />
+    <Compile Include="DbContext.dbl" />
+    <Compile Include="Items.dbl" />
+    <Compile Include="ItemsMetaData.dbl" />
+    <Compile Include="OrderItems.dbl" />
+    <Compile Include="OrderItemsMetaData.dbl" />
+    <Compile Include="Orders.dbl" />
+    <Compile Include="OrdersMetaData.dbl" />
+    <Compile Include="Vendors.dbl" />
+    <Compile Include="VendorsMetaData.dbl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomConverters\CustomConverters.synproj">
+      <Name>CustomConverters</Name>
+      <Project>{dfbe0e7b-c223-430a-a7da-fbeac5582fc3}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /Y &quot;$(ProjectDir)bin\$(Platform)\$(Configuration)\Services.Models.xml&quot; &quot;$(SolutionDir)XmlDoc\Services.Models.xml&quot; &gt; nul" />
+  </Target>
+</Project>

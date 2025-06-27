@@ -1,0 +1,269 @@
+
+import System
+import System.Collections.Generic
+import System.Text
+import System.Diagnostics
+import System.Collections.Concurrent
+import System.Threading
+import System.Threading.Tasks
+import System.Threading.Channels
+ 
+namespace Harmony.Core.Utility
+ 
+    public class MyBlockingObjectPool<T(class)> implements IDisposable
+ 
+        public virtual method Dispose, void
+            endparams
+        proc
+            _channel.Writer.Complete()
+            ;; Clear made items
+            try
+            begin
+                Monitor.Enter(_madeItems)
+                begin
+                    _madeItems.Clear()
+                end
+            end
+            finally
+            begin
+                Monitor.Exit(_madeItems)
+            end
+            endtry
+        endmethod
+ 
+        private _factory, @Func<IServiceProvider, T>
+ 
+        private _enableDebug, boolean
+        private _maxCreated, int
+        private _pruneAbove, int
+        protected _madeItems, @List<ItemPlaceHolder>
+        protected _channel, @Channel<T>
+        private _waitDuration, TimeSpan
+        protected readwrite property Init, @Action<T, IServiceProvider>  
+        protected readwrite property Recycle, @Func<T, Task>
+        protected readwrite property CanRecycle, @Func<T, boolean>
+        protected readwrite property Destroy, @Action<T>  
+ 
+        protected class ItemPlaceHolder
+            public Item, T
+            public AllocatedAt, @StackTrace
+        endclass
+ 
+        protected method MyBlockingObjectPool
+            factory, @Func<IServiceProvider, T>
+            maxCreated, int
+            pruneAbove, int 
+            waitDuration, TimeSpan
+            default enableDebug, boolean, false
+            endparams
+        proc
+            _factory = factory
+            _enableDebug = enableDebug
+            _maxCreated = maxCreated
+            _pruneAbove = pruneAbove
+            _waitDuration = waitDuration
+            _channel = System.Threading.Channels.Channel.CreateUnbounded<T>()
+            _madeItems = new List<ItemPlaceHolder>()
+        endmethod
+ 
+        protected method CreateFast, T
+            serviceProvider, @IServiceProvider
+        proc
+            data result, @ItemPlaceHolder, ^null
+            data avilableResult, T
+            if (_channel.Reader.TryRead(avilableResult))
+            begin
+                if(this.Init != ^null)
+                    this.Init(avilableResult, serviceProvider)
+ 
+                mreturn avilableResult
+            end
+ 
+            try
+            begin
+                Monitor.Enter(_madeItems)
+                begin
+                    if (_madeItems.Count < _maxCreated || _maxCreated == -1)
+                    begin
+                        result = new ItemPlaceHolder()
+                        _madeItems.Add(result)
+                    end
+                end
+            end
+            finally
+            begin
+                Monitor.Exit(_madeItems)
+            end
+            endtry
+            if (result != ^null) then
+            begin
+                try
+                begin
+                    ;; make the item and initialize it if possible
+                    result.Item = _factory(serviceProvider)
+                    if (this.Init != ^null)
+                        this.Init(result.Item, serviceProvider)
+                end
+                catch (ex, @Exception)
+                begin
+                    try
+                    begin
+                        Monitor.Enter(_madeItems)
+                        begin
+                            _madeItems.Remove(result)
+                        end
+                    end
+                    finally
+                    begin
+                        Monitor.Exit(_madeItems)
+                    end
+                    endtry
+                    throw
+                end
+                endtry
+                if (_enableDebug)
+                begin
+                    result.AllocatedAt = new StackTrace()
+                end
+                mreturn result.Item
+            end
+            else
+            begin
+                mreturn ^null
+            end
+        endmethod
+ 
+        protected async method CreateAsync, @Task<T>
+            serviceProvider, @IServiceProvider
+            endparams
+        proc
+            data resultObj = CreateFast(serviceProvider)
+            if (resultObj != ^null) then
+            begin
+                mreturn resultObj
+            end
+            else
+            begin
+                data token = CancellationToken.None
+                if (_waitDuration.Ticks != 0)
+                begin
+                    data tokenSource = new CancellationTokenSource(_waitDuration)
+                    token = tokenSource.Token
+                end
+                data resultObj = await _channel.Reader.ReadAsync(token)
+ 
+                if (this.Init != ^null)
+                    this.Init(resultObj, serviceProvider)
+ 
+                if (_enableDebug)
+                begin
+                    try
+                    begin
+                        Monitor.Enter(_madeItems)
+                        begin
+                            data foundObject = _madeItems.Find(lambda (holder) { holder.Item == resultObj })
+                            foundObject.AllocatedAt = new StackTrace()
+                        end
+                    end
+                    finally
+                    begin
+                        Monitor.Exit(_madeItems)
+                    end
+                    endtry
+                end
+                mreturn resultObj
+            end
+        endmethod
+ 
+ 
+		
+        protected method Return, boolean
+            obj, T 
+            endparams
+        proc
+            try
+            begin
+                if(CanRecycle == ^null || CanRecycle(obj)) then
+                begin
+                    RecycleItem(obj)
+                end
+                else
+                begin
+                    RemoveFromMadeItems(obj)
+                    FinalDestroyItem(obj)
+                end
+            end
+            catch (ex, @Exception)
+            begin
+                RemoveFromMadeItems(obj)
+                FinalDestroyItem(obj)
+                Trace.TraceError(ex.ToString())
+            end
+            endtry
+            mreturn false
+        endmethod
+ 
+        private async method RecycleItem, void
+            obj, T
+        proc
+            try
+            begin
+ 
+                if (Recycle != ^null)
+                begin
+                    await Recycle(obj)
+                end
+                await _channel.Writer.WriteAsync(obj)
+            end
+            ;;async void method - gotta catch em all
+            catch(ex, @Exception)
+            begin
+                FinalDestroyItem(obj)
+                RemoveFromMadeItems(obj)
+            end
+            endtry
+ 
+        endmethod
+ 
+ 
+        private method FinalDestroyItem, void
+            obj, T
+        proc
+            try
+            begin
+                if(Destroy != ^null)
+                begin
+                    Destroy(obj)
+                end
+ 
+                data disposableObj = ^as(obj, @IDisposable)
+                disposableObj?.Dispose()
+            end
+            catch (ex, @Exception)
+            begin
+                Trace.TraceError(ex.ToString())
+            end
+            endtry
+        endmethod
+ 
+ 
+        private method RemoveFromMadeItems, void
+            obj, T
+        proc
+            try
+            begin
+                Monitor.Enter(_madeItems)
+                begin
+                    _madeItems.RemoveAll(lambda (holder) { holder.Item == obj })
+                end
+            end
+            finally
+            begin
+                Monitor.Exit(_madeItems)
+            end
+            endtry
+        endmethod
+ 
+    endclass
+ 
+endnamespace

@@ -1,0 +1,12 @@
+
+namespace TraditionalBridge.Helpers
+
+    public class StuckProcessTracking
+
+        public static readwrite property DeadlineSeconds, int
+
+        public static readwrite property XctlMinutes, int
+
+    endclass
+
+endnamespace

@@ -1,0 +1,51 @@
+
+import System
+import Harmony.Core.Converters
+import System.Text.RegularExpressions
+
+namespace Harmony.Core.Converters
+
+    ;;; <summary>
+    ;;; Convert between a D4 WWYY field and an a4 WWYY string.
+    ;;; </summary>
+    public static class WWYYConverter
+
+        ;;; <summary>
+        ;;; Convert from WWYY date (d4) to WWYY (a4)
+        ;;; </summary>
+        ;;; <param name="mmyyDate">MMYY date to convert</param>
+        ;;; <returns>Returns YYYY-MM or an empty string if the data is invalid</returns>
+        public static method Convert, string
+            required in wwyyDate, d4 ;WWYY
+        proc
+            mreturn ^a(wwyyDate)
+        endmethod
+
+        ;;; <summary>
+        ;;; Convert from the EXPOSED format to the STORAGE format
+        ;;; Convert from a WWYY (string) value to a WWYY (d4) value
+        ;;; </summary>
+        ;;; <param name="theDate">YYYY-MM value to convert</param>
+        ;;; <returns>Returns a MMYY value or 0000 if the data is invalid</returns>
+        public static method ConvertBack, a
+            required in theDate, a4 ;WWYY
+        proc
+            mreturn %string(^d(theDate),"XXXX")
+        endmethod
+
+        ;;; <summary>
+        ;;; Convert from the publicly exposed value back to the storage value.
+        ;;; </summary>
+        public class LiteralFormatter implements ILiteralFormatter
+
+            public virtual method FormatLiteral, string
+                inputLiteral, string 
+            proc
+                mreturn MMYYConverter.ConvertBack(inputLiteral)
+            endmethod
+
+        endclass
+
+    endclass
+
+endnamespace

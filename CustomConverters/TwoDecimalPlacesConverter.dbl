@@ -1,0 +1,68 @@
+;;**********************************************************************
+;;
+;; Title:       TwoDecimalPlacesConverter.dbl
+;;
+;; Type:        Class
+;;
+;;*****************************************************************************
+
+import System
+import Harmony.Core.Converters
+
+namespace Harmony.Core.Converters
+
+    ;;; <summary>
+    ;;; Convert between a decimal field and an implied decimal field with two decimal places.
+    ;;; </summary>
+    public static class TwoDecimalPlacesConverter
+
+        ;;; <summary>
+        ;;; Convert a decimal value to an implied decimal value with two decimal places.
+        ;;; </summary>
+        ;;; <param name="ynValue">Y/N value to convert.</param>
+        ;;; <returns>Returns the boolean equivalent of the Y/N value passed in.</returns>
+        public static method Convert, decimal
+            decimalValue, d
+        proc
+            data tmpval, decimal, decimalValue / 100
+            mreturn tmpval
+        endmethod
+
+        ;;; <summary>
+        ;;; Convert from an implied decimal value with two decimal places to a decimalvalue.
+        ;;; </summary>
+        ;;; <param name="booleanValue">Boolean value to convert.</param>
+        ;;; <returns>Returns the Y/N value of the boolean passed in.</returns>
+        public static method ConvertBack, d
+            impliedDecimalValue, decimal
+        proc
+            data decimalValue = impliedDecimalValue * 100
+            mreturn decimalValue
+        endmethod
+
+        ;;; <summary>
+        ;;; Convert from the publicly exposed value back to the storage value.
+        ;;; </summary>
+        public class LiteralFormatter implements ILiteralFormatter
+
+            public virtual method FormatLiteral, string
+                inputLiteral, string
+            proc
+                data decimalValue, decimal, 0
+                try
+                begin
+                    decimalValue = Convert.ToDecimal(inputLiteral)
+                end
+                catch (e, @Exception)
+                begin
+                    decimalValue = 0
+                end
+                endtry
+                mreturn %string(TwoDecimalPlacesConverter.ConvertBack(decimalValue))
+            endmethod
+
+        endclass
+
+    endclass
+
+endnamespace

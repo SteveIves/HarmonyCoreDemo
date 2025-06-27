@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CommonEnvVars>RPSMFIL=$(SolutionDir)Repository\rpsmain.ism;RPSTFIL=$(SolutionDir)Repository\rpstext.ism;XFPL_SMCPATH=$(SolutionDir)TraditionalBridge\smc;UT=$(SolutionDir)TraditionalBridge\exe;TESTFILES=$(SolutionDir)SampleRequestResponse;ASPNETCORE_URLS=https://*:8086&#x0;http://*:8085;ASPNETCORE_HTTPS_PORT=8086;TELEMETRY_ENABLED=OFF;TELEMETRY_ENDPONT=http://10.199.0.35:4317/</CommonEnvVars>
+  </PropertyGroup>
+</Project>

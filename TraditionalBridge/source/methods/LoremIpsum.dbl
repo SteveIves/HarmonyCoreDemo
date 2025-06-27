@@ -1,0 +1,37 @@
+;;--------------------------------------------------------------------------------------------------
+;; LoremIpsum (A test method that returns Lorem Ipsum data)
+;;
+;;; <summary>
+;;; A test method that returns Lorem Ipsum data
+;;; </summary>
+;;; <param name="RecordsToReturn"></param>
+;;; <param name="Records">Returned records</param>
+;;; <param name="ErrorMessage">Error message if return value is ERROR</param>
+;;; <returns>Returns OK or ERROR</returns>
+
+import System.Collections
+
+function LoremIpsum, string
+    required in  RecordsToReturn, i4
+    required out Records, @ArrayList
+    required out ErrorMessage, string
+    stack record
+        ix, i4
+    endrecord
+proc
+    if (RecordsToReturn < 1)
+    begin
+        ErrorMessage = "No records requested!"
+        freturn "ERROR"
+    end
+
+    for ix from 1 thru RecordsToReturn
+    begin
+        Records.Add((string)"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat, erat vitae tincidunt tincidunt, nisi ligula malesuada ipsum, nec feugiat nisl dui id libero. Sed interdum, eros eget dapibus aliquet, libero purus elementum urna, et facilisis quam massa non purus.")
+    end
+
+    ErrorMessage = ""
+
+    freturn "OK"
+
+endfunction

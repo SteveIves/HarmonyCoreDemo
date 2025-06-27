@@ -1,0 +1,53 @@
+
+subroutine CheckOpenChannels
+    aSubroutine, a
+    stack record
+        tmpval, a128
+        len, i4
+    endrecord
+    common
+        chtrk_enabled,  boolean
+        chtrk_tt_chn,   i4
+        chtrx_log_chn,  i4
+    endcommon
+proc
+    if (chtrk_enabled)
+    begin
+        data ch, i4
+        data logch = 0
+        data issues = 0
+
+        for ch from 1 thru 1024
+        begin
+            if (ch!=chtrk_tt_chn && ch!=chtrx_log_chn && ch!=logch && %chopen(ch))
+            begin
+                ;Get the file name
+                xcall filnm(ch,tmpval,len)
+
+                ;Ignore replication queue files
+                if (%instr(1,tmpval,"REPLICATION_"))
+                    nextloop
+
+                ;Houston, we have a problem!
+                if (issues+=1 == 1)
+                begin
+                    data now, a20, %datetime()
+                    open(logch,o:s,now+"ERRORS." + %atrim(aSubroutine) + ".LOG")
+                end
+                writes(logch,aSubroutine+" left channel " + %string(ch,"XXXX") + " open (" + tmpval(1:len) + ")")
+
+                ;And close the channel
+                close ch
+            end
+        end
+
+        ;If we logged any issues, close our log file
+        if (issues>0)
+        begin
+            close logch
+        end
+    end
+
+    xreturn
+
+endsubroutine

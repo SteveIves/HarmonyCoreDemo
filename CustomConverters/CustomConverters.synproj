@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="restore;Build">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <DefaultLanguageSourceExtension>.dbl</DefaultLanguageSourceExtension>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <ProjectGuid>{dfbe0e7b-c223-430a-a7da-fbeac5582fc3}</ProjectGuid>
+    <Name>CustomConverters</Name>
+    <RootNamespace>Harmony.Core.Converters</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <UnevaluatedOutputPath>bin\$(Platform)\$(Configuration)</UnevaluatedOutputPath>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <DocumentationFile>bin\$(Platform)\$(Configuration)\CustomConverters.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <UnevaluatedOutputPath>bin\$(Platform)\$(Configuration)</UnevaluatedOutputPath>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <DocumentationFile>bin\$(Platform)\$(Configuration)\CustomConverters.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="MMDDYYYYConverter.dbl" />
+    <Compile Include="MMYYConverter.dbl" />
+    <Compile Include="MMYYYYConverter.dbl" />
+    <Compile Include="StateCodeValidator.dbl" />
+    <Compile Include="TwoDecimalPlacesConverter.dbl" />
+    <Compile Include="MaybeTwoDecimalPlacesConverter.dbl" />
+    <Compile Include="WWYYConverter.dbl" />
+    <Compile Include="WWYYValidator.dbl" />
+    <Compile Include="YnDefaultNoBooleanConverter.dbl" />
+    <Compile Include="YnDefaultYesBooleanConverter.dbl" />
+    <Compile Include="YYYYMMDDToTmJulian.dbl" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Harmony.Core">
+      <Version>8.0.76</Version>
+    </PackageReference>
+    <PackageReference Include="Synergex.SynergyDE.Build">
+      <Version>24.9.2004</Version>
+    </PackageReference>
+    <PackageReference Include="Synergex.SynergyDE.synrnt">
+      <Version>12.4.1.1001</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>

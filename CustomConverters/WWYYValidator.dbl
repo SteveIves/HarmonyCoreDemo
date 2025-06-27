@@ -1,0 +1,33 @@
+
+import System
+import System.ComponentModel.DataAnnotations
+import System.Text.RegularExpressions
+
+namespace Harmony.Core.Converters
+
+    sealed public class WWYYValidator extends ValidationAttribute
+
+        public override method IsValid, boolean
+            required in value, @object
+        proc
+            data ok = true
+            data stringValue = (string)value
+
+            ;Verify that the data contains exactly 4 numeric digits
+            data rx = new Regex("^\d{4}$")
+            ok = rx.IsMatch(stringValue) 
+
+            ;Verify that the first two digits are in the range 1 to 52
+            if (ok)
+            begin
+                data ww = Convert.ToInt32(stringValue.Substring(0,2))
+                ok = (ww>=1 && ww <=52)
+            end
+
+            mreturn ok
+
+        endmethod
+
+    endclass
+
+endnamespace

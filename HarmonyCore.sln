@@ -1,0 +1,380 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Services", "Services\Services.synproj", "{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}"
+EndProject
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Services.Host", "Services.Host\Services.Host.synproj", "{FADE4C84-E916-4629-B757-0556884FF7F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{6C9AD151-7DA4-477B-A52C-FB883D9D1057}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\GenerateTestValues.tpl = Templates\GenerateTestValues.tpl
+		Templates\HarmonyCoreCustomization.tpl = Templates\HarmonyCoreCustomization.tpl
+		Templates\ODataClientModel.tpl = Templates\ODataClientModel.tpl
+		Templates\ODataController.tpl = Templates\ODataController.tpl
+		Templates\ODataControllerPropertyEndpoints.tpl = Templates\ODataControllerPropertyEndpoints.tpl
+		Templates\ODataCustomAuthController.tpl = Templates\ODataCustomAuthController.tpl
+		Templates\ODataCustomAuthModels.tpl = Templates\ODataCustomAuthModels.tpl
+		Templates\ODataCustomAuthTools.tpl = Templates\ODataCustomAuthTools.tpl
+		Templates\ODataDbContext.tpl = Templates\ODataDbContext.tpl
+		Templates\ODataEdmBuilder.tpl = Templates\ODataEdmBuilder.tpl
+		Templates\ODataMetaData.tpl = Templates\ODataMetaData.tpl
+		Templates\ODataModel.tpl = Templates\ODataModel.tpl
+		Templates\ODataPostManTests.tpl = Templates\ODataPostManTests.tpl
+		Templates\ODataSelfHost.tpl = Templates\ODataSelfHost.tpl
+		Templates\ODataSelfHostEnvironment.tpl = Templates\ODataSelfHostEnvironment.tpl
+		Templates\ODataStartup.tpl = Templates\ODataStartup.tpl
+		Templates\ODataTestConstantsProperties.tpl = Templates\ODataTestConstantsProperties.tpl
+		Templates\ODataTestDataLoader.tpl = Templates\ODataTestDataLoader.tpl
+		Templates\ODataTestEnvironment.tpl = Templates\ODataTestEnvironment.tpl
+		Templates\ODataUnitTestEnvironment.tpl = Templates\ODataUnitTestEnvironment.tpl
+		Templates\ODataUnitTestHost.tpl = Templates\ODataUnitTestHost.tpl
+		Templates\ODataUnitTests.tpl = Templates\ODataUnitTests.tpl
+		Templates\ODataVsRestClientTests.tpl = Templates\ODataVsRestClientTests.tpl
+		Templates\PostManDevelopmentEnvironment.tpl = Templates\PostManDevelopmentEnvironment.tpl
+		Templates\StructureKeysReport.tpl = Templates\StructureKeysReport.tpl
+		Templates\SystemTextJsonModel.tpl = Templates\SystemTextJsonModel.tpl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29AEA4C4-62B2-4F46-9B80-5F061D950BE1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		CleanBinaryFiles.bat = CleanBinaryFiles.bat
+		ExcludeKeys.json = ExcludeKeys.json
+		HarmonyCoreCustomization.json = HarmonyCoreCustomization.json
+		regen.data_structures.json = regen.data_structures.json
+		regen.file_structures.json = regen.file_structures.json
+		regen_bridge.bat = regen_bridge.bat
+		regen_bridge_last.bat = regen_bridge_last.bat
+		regen_config.bat = regen_config.bat
+		regen_keyreports.bat = regen_keyreports.bat
+		regen_odata.bat = regen_odata.bat
+		regen_odata_last.bat = regen_odata_last.bat
+		UserDefinedTokens.tkn = UserDefinedTokens.tkn
+		UserDefinedTokens.tkn.example = UserDefinedTokens.tkn.example
+	EndProjectSection
+EndProject
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Services.Isolated", "Services.Isolated\Services.Isolated.synproj", "{24C27355-5431-44C4-A3E4-64C1BED1A055}"
+EndProject
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Services.Models", "Services.Models\Services.Models.synproj", "{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}"
+EndProject
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Services.Controllers", "Services.Controllers\Services.Controllers.synproj", "{C521DDB1-D75E-43BD-A8C1-54A888D13E12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TraditionalBridge", "TraditionalBridge", "{1E3F00B9-F73D-459B-A8DB-310E97FEE18C}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\TraditionalBridge\GlobalStructures.tpl = Templates\TraditionalBridge\GlobalStructures.tpl
+		Templates\TraditionalBridge\InterfaceController.tpl = Templates\TraditionalBridge\InterfaceController.tpl
+		Templates\TraditionalBridge\InterfaceDispatcher.tpl = Templates\TraditionalBridge\InterfaceDispatcher.tpl
+		Templates\TraditionalBridge\InterfaceDispatcherCustom.tpl = Templates\TraditionalBridge\InterfaceDispatcherCustom.tpl
+		Templates\TraditionalBridge\InterfaceDispatcherData.tpl = Templates\TraditionalBridge\InterfaceDispatcherData.tpl
+		Templates\TraditionalBridge\InterfaceDocumentation.tpl = Templates\TraditionalBridge\InterfaceDocumentation.tpl
+		Templates\TraditionalBridge\InterfaceMethodDispatchers.tpl = Templates\TraditionalBridge\InterfaceMethodDispatchers.tpl
+		Templates\TraditionalBridge\InterfaceMethodStubs.tpl = Templates\TraditionalBridge\InterfaceMethodStubs.tpl
+		Templates\TraditionalBridge\InterfacePostmanTests.tpl = Templates\TraditionalBridge\InterfacePostmanTests.tpl
+		Templates\TraditionalBridge\InterfaceService.tpl = Templates\TraditionalBridge\InterfaceService.tpl
+		Templates\TraditionalBridge\InterfaceServiceModels.tpl = Templates\TraditionalBridge\InterfaceServiceModels.tpl
+		Templates\TraditionalBridge\InterfaceSuperDispatcher.tpl = Templates\TraditionalBridge\InterfaceSuperDispatcher.tpl
+		Templates\TraditionalBridge\InterfaceTestRequests.tpl = Templates\TraditionalBridge\InterfaceTestRequests.tpl
+		Templates\TraditionalBridge\InterfaceTestResponses.tpl = Templates\TraditionalBridge\InterfaceTestResponses.tpl
+		Templates\TraditionalBridge\InterfaceUnitTests.tpl = Templates\TraditionalBridge\InterfaceUnitTests.tpl
+		Templates\TraditionalBridge\InterfaceUnitTestValues.tpl = Templates\TraditionalBridge\InterfaceUnitTestValues.tpl
+		Templates\TraditionalBridge\InterfaceVsRestClientTests.tpl = Templates\TraditionalBridge\InterfaceVsRestClientTests.tpl
+		Templates\TraditionalBridge\MetadataInit.tpl = Templates\TraditionalBridge\MetadataInit.tpl
+		Templates\TraditionalBridge\MultiInterfaceServiceModels.tpl = Templates\TraditionalBridge\MultiInterfaceServiceModels.tpl
+		Templates\TraditionalBridge\ODataActionModels.tpl = Templates\TraditionalBridge\ODataActionModels.tpl
+		Templates\TraditionalBridge\ODataMetaData.tpl = Templates\TraditionalBridge\ODataMetaData.tpl
+		Templates\TraditionalBridge\ODataModel.tpl = Templates\TraditionalBridge\ODataModel.tpl
+		Templates\TraditionalBridge\OptionalParameterMethodDispatchers.tpl = Templates\TraditionalBridge\OptionalParameterMethodDispatchers.tpl
+		Templates\TraditionalBridge\TraditionalMetaData.tpl = Templates\TraditionalBridge\TraditionalMetaData.tpl
+		Templates\TraditionalBridge\TraditionalModel.tpl = Templates\TraditionalBridge\TraditionalModel.tpl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SignalR", "SignalR", "{F11D78B0-4DF7-453C-854C-A87CA031EC84}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\SignalR\SignalRHub.tpl = Templates\SignalR\SignalRHub.tpl
+		Templates\SignalR\SignalRRequestFactory.tpl = Templates\SignalR\SignalRRequestFactory.tpl
+		Templates\SignalR\SignalRResponseValidation.tpl = Templates\SignalR\SignalRResponseValidation.tpl
+		Templates\SignalR\SignalRTests.tpl = Templates\SignalR\SignalRTests.tpl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySQL", "MySQL", "{0AE51FCB-6E58-4A51-A681-05498CA61E37}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\MySQL\ODataController.tpl = Templates\MySQL\ODataController.tpl
+		Templates\MySQL\ODataEdmBuilder.tpl = Templates\MySQL\ODataEdmBuilder.tpl
+		Templates\MySQL\ODataPostManTests.tpl = Templates\MySQL\ODataPostManTests.tpl
+		Templates\MySQL\ODataSelfHostEnvironment.tpl = Templates\MySQL\ODataSelfHostEnvironment.tpl
+		Templates\MySQL\ODataStartup.tpl = Templates\MySQL\ODataStartup.tpl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReactRedux", "ReactRedux", "{8F14351E-8ECB-4B55-9688-2992D80FAA65}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\ReactRedux\ODataReactAPI.tpl = Templates\ReactRedux\ODataReactAPI.tpl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScript", "TypeScript", "{2C584094-5A66-4A3B-BDEF-634886A6DA1D}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\TypeScript\TypeScriptInterfaceClient.tpl = Templates\TypeScript\TypeScriptInterfaceClient.tpl
+		Templates\TypeScript\TypeScriptInterfaceMethods.tpl = Templates\TypeScript\TypeScriptInterfaceMethods.tpl
+		Templates\TypeScript\TypeScriptInterfaceStructures.tpl = Templates\TypeScript\TypeScriptInterfaceStructures.tpl
+	EndProjectSection
+EndProject
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "TraditionalBridge", "TraditionalBridge\TraditionalBridge.synproj", "{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}"
+EndProject
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "CustomConverters", "CustomConverters\CustomConverters.synproj", "{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postman Files", "Postman Files", "{D4A3155C-11DC-4D65-BAA2-877C986BA3E2}"
+	ProjectSection(SolutionItems) = preProject
+		Postman_BridgeAPITests.postman_collection.json = Postman_BridgeAPITests.postman_collection.json
+		Postman_LocalDevelopment.postman_environment.json = Postman_LocalDevelopment.postman_environment.json
+		PostMan_ODataTests.postman_collection.json = PostMan_ODataTests.postman_collection.json
+		Postman_StagingServiceIIS.postman_environment.json = Postman_StagingServiceIIS.postman_environment.json
+		PostMan_StagingServiceTireMaxVM.postman_environment.json = PostMan_StagingServiceTireMaxVM.postman_environment.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Publishing Files", "Publishing Files", "{6D545CE6-7377-4FDB-9EF9-83638B8B613E}"
+	ProjectSection(SolutionItems) = preProject
+		check = check
+		dump = dump
+		startserver = startserver
+		PublishForLinux.bat = PublishForLinux.bat
+		stopserver = stopserver
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HttpTests", "HttpTests", "{51ED81B2-54C6-4706-9F71-9B4F27D1315A}"
+	ProjectSection(SolutionItems) = preProject
+		HttpTests\BridgeAPI.http = HttpTests\BridgeAPI.http
+		HttpTests\Customers.http = HttpTests\Customers.http
+		HttpTests\Items.http = HttpTests\Items.http
+		HttpTests\OrderItems.http = HttpTests\OrderItems.http
+		HttpTests\Orders.http = HttpTests\Orders.http
+		HttpTests\Vendors.http = HttpTests\Vendors.http
+		HttpTests\_README.TXT = HttpTests\_README.TXT
+	EndProjectSection
+EndProject
+Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Repository", "Repository\Repository.synproj", "{D5C15AFB-B432-4197-B931-03E5AE7F15E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|linux64 = Debug|linux64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|linux64 = Release|linux64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+		ReleaseNuget|Any CPU = ReleaseNuget|Any CPU
+		ReleaseNuget|linux64 = ReleaseNuget|linux64
+		ReleaseNuget|x64 = ReleaseNuget|x64
+		ReleaseNuget|x86 = ReleaseNuget|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|linux64.ActiveCfg = Debug|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|linux64.Build.0 = Debug|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|x64.Build.0 = Debug|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|x86.ActiveCfg = Debug|x86
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Debug|x86.Build.0 = Debug|x86
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|linux64.ActiveCfg = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|linux64.Build.0 = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|x64.ActiveCfg = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|x64.Build.0 = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|x86.ActiveCfg = Release|x86
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.Release|x86.Build.0 = Release|x86
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|linux64.ActiveCfg = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|linux64.Build.0 = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|x64.ActiveCfg = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|x64.Build.0 = Release|Any CPU
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|x86.ActiveCfg = Release|x86
+		{F8F3DCC4-3004-4803-8BDE-4284FFEAD102}.ReleaseNuget|x86.Build.0 = Release|x86
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|linux64.ActiveCfg = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|linux64.Build.0 = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|x64.Build.0 = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|linux64.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|linux64.Build.0 = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|x64.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|x64.Build.0 = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.Release|x86.Build.0 = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|linux64.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|linux64.Build.0 = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|x64.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|x64.Build.0 = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|x86.ActiveCfg = Release|Any CPU
+		{FADE4C84-E916-4629-B757-0556884FF7F5}.ReleaseNuget|x86.Build.0 = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|linux64.ActiveCfg = Debug|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|linux64.Build.0 = Debug|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|x64.Build.0 = Debug|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|x86.ActiveCfg = Debug|x86
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Debug|x86.Build.0 = Debug|x86
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|linux64.ActiveCfg = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|linux64.Build.0 = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|x64.ActiveCfg = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|x64.Build.0 = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|x86.ActiveCfg = Release|x86
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.Release|x86.Build.0 = Release|x86
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|linux64.ActiveCfg = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|linux64.Build.0 = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|x64.ActiveCfg = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|x64.Build.0 = Release|Any CPU
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|x86.ActiveCfg = Release|x86
+		{24C27355-5431-44C4-A3E4-64C1BED1A055}.ReleaseNuget|x86.Build.0 = Release|x86
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|linux64.ActiveCfg = Debug|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|linux64.Build.0 = Debug|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|x64.Build.0 = Debug|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|x86.ActiveCfg = Debug|x86
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Debug|x86.Build.0 = Debug|x86
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|linux64.ActiveCfg = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|linux64.Build.0 = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|x64.ActiveCfg = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|x64.Build.0 = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|x86.ActiveCfg = Release|x86
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.Release|x86.Build.0 = Release|x86
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|linux64.ActiveCfg = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|linux64.Build.0 = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|x64.ActiveCfg = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|x64.Build.0 = Release|Any CPU
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|x86.ActiveCfg = Release|x86
+		{6E6DAF9B-EFDE-4690-963A-E96A4A8D48FD}.ReleaseNuget|x86.Build.0 = Release|x86
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|linux64.ActiveCfg = Debug|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|linux64.Build.0 = Debug|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|x64.Build.0 = Debug|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|x86.ActiveCfg = Debug|x86
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Debug|x86.Build.0 = Debug|x86
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|linux64.ActiveCfg = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|linux64.Build.0 = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|x64.ActiveCfg = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|x64.Build.0 = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|x86.ActiveCfg = Release|x86
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.Release|x86.Build.0 = Release|x86
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|linux64.ActiveCfg = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|linux64.Build.0 = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|x64.ActiveCfg = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|x64.Build.0 = Release|Any CPU
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|x86.ActiveCfg = Release|x86
+		{C521DDB1-D75E-43BD-A8C1-54A888D13E12}.ReleaseNuget|x86.Build.0 = Release|x86
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|Any CPU.ActiveCfg = Debug|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|Any CPU.Build.0 = Debug|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|linux64.ActiveCfg = Debug|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|linux64.Build.0 = Debug|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|x64.ActiveCfg = Debug|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|x64.Build.0 = Debug|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|x86.ActiveCfg = Debug|x86
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Debug|x86.Build.0 = Debug|x86
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|Any CPU.ActiveCfg = Release|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|Any CPU.Build.0 = Release|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|linux64.ActiveCfg = Release|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|linux64.Build.0 = Release|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|x64.ActiveCfg = Release|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|x64.Build.0 = Release|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|x86.ActiveCfg = Release|x86
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.Release|x86.Build.0 = Release|x86
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|Any CPU.ActiveCfg = Release|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|Any CPU.Build.0 = Release|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|linux64.ActiveCfg = Release|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|linux64.Build.0 = Release|linux64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|x64.ActiveCfg = Release|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|x64.Build.0 = Release|x64
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|x86.ActiveCfg = Release|x86
+		{FBF1CD67-25D5-4AFF-995E-A9373E9D5DC5}.ReleaseNuget|x86.Build.0 = Release|x86
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|linux64.ActiveCfg = Debug|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|linux64.Build.0 = Debug|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|x64.Build.0 = Debug|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|x86.ActiveCfg = Debug|x86
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Debug|x86.Build.0 = Debug|x86
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|linux64.ActiveCfg = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|linux64.Build.0 = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|x64.ActiveCfg = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|x64.Build.0 = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|x86.ActiveCfg = Release|x86
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.Release|x86.Build.0 = Release|x86
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|linux64.ActiveCfg = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|linux64.Build.0 = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|x64.ActiveCfg = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|x64.Build.0 = Release|Any CPU
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|x86.ActiveCfg = Release|x86
+		{DFBE0E7B-C223-430A-A7DA-FBEAC5582FC3}.ReleaseNuget|x86.Build.0 = Release|x86
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|linux64.ActiveCfg = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|linux64.Build.0 = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|x64.Build.0 = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Debug|x86.Build.0 = Debug|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|linux64.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|linux64.Build.0 = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|x64.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|x64.Build.0 = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|x86.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.Release|x86.Build.0 = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|Any CPU.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|Any CPU.Build.0 = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|linux64.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|linux64.Build.0 = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|x64.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|x64.Build.0 = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|x86.ActiveCfg = Release|Any CPU
+		{D5C15AFB-B432-4197-B931-03E5AE7F15E1}.ReleaseNuget|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1E3F00B9-F73D-459B-A8DB-310E97FEE18C} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
+		{F11D78B0-4DF7-453C-854C-A87CA031EC84} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
+		{0AE51FCB-6E58-4A51-A681-05498CA61E37} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
+		{8F14351E-8ECB-4B55-9688-2992D80FAA65} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
+		{2C584094-5A66-4A3B-BDEF-634886A6DA1D} = {6C9AD151-7DA4-477B-A52C-FB883D9D1057}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8AFF387-4A8D-4C4E-A074-A2815072463A}
+	EndGlobalSection
+EndGlobal

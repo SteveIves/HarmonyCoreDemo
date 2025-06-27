@@ -1,0 +1,103 @@
+import System
+import System.Collections.Generic
+import System.Text
+
+import Microsoft.Extensions.DependencyInjection
+import System.Diagnostics
+import Harmony.Core.Context
+
+namespace Services.Temp
+
+    public class MyExternalContextPool<T(IContextBase, class)> extends MyBlockingPoolContextFactory<T>
+        private mStartInfo, @System.Diagnostics.ProcessStartInfo
+
+        public method MyExternalContextPool
+            targetExe, @string
+            targetArguments, @string
+            targetDirectory, @string
+            environmentVariables, @IEnumerable<KeyValuePair<string, string>>
+            min, int
+            stickySession, boolean
+            endparams
+            this(StartInfoHelper(targetExe, targetArguments, targetDirectory, environmentVariables), min, -1, TimeSpan.FromSeconds(30))
+        proc
+           
+        endmethod
+
+        public method MyExternalContextPool
+            targetExe, @string
+            targetArguments, @string
+            targetDirectory, @string
+            environmentVariables, @IEnumerable<KeyValuePair<string, string>>
+            min, int
+            max, int
+            blockingTimeout, TimeSpan
+            debugMode, boolean
+            endparams
+            this(StartInfoHelper(targetExe, targetArguments, targetDirectory, environmentVariables), min, max, blockingTimeout, debugMode)
+        proc
+        endmethod
+
+        public method MyExternalContextPool
+            startInfo, @System.Diagnostics.ProcessStartInfo
+            min, int
+            max, int
+            blockingTimeout, TimeSpan
+            default debugMode, boolean, false
+            endparams
+            parent(CreateInstanceHelper(startInfo), max, min, blockingTimeout, false)
+        proc
+            mStartInfo = startInfo
+        endmethod
+
+        public method MyExternalContextPool
+            targetExe, @string
+            targetArguments, @string
+            targetDirectory, @string
+            environmentVariables, @IEnumerable<KeyValuePair<string, string>>
+            min, int
+            endparams
+            this(targetExe, targetArguments, targetDirectory, environmentVariables, min, false)
+        proc
+
+        endmethod
+
+        private static method StartInfoHelper, @System.Diagnostics.ProcessStartInfo
+            targetExe, @string
+            targetArguments, @string
+            targetDirectory, @string
+            environmentVariables, @IEnumerable<KeyValuePair<string, string>>
+        proc
+            data startInfo = new System.Diagnostics.ProcessStartInfo()
+            startInfo.FileName = targetExe
+            startInfo.WorkingDirectory = targetDirectory
+            startInfo.CreateNoWindow = true
+            startInfo.UseShellExecute = false
+            if(environmentVariables != ^null)
+            begin
+                data envVar, KeyValuePair<string, string>
+                foreach envVar in environmentVariables
+                    startInfo.EnvironmentVariables.Add(envVar.Key, envVar.Value)
+            end
+
+            startInfo.Arguments = targetArguments
+            startInfo.RedirectStandardOutput = true
+            startInfo.RedirectStandardInput = true
+            mreturn startInfo
+        endmethod
+
+        private static method CreateInstanceHelper, @Func<IServiceProvider, T>
+            startInfo, @System.Diagnostics.ProcessStartInfo
+        proc
+            lambda createInstance(sp)
+            begin
+                data callConection = new ProcessDynamicCallConnection(startInfo)
+                mreturn ActivatorUtilities.CreateInstance<T>(sp, callConection)
+            end
+            data result, @Func<IServiceProvider, T>
+            result = createInstance
+            mreturn result
+        endmethod
+    endclass
+
+endnamespace

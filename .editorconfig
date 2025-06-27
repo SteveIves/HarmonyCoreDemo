@@ -1,0 +1,8 @@
+# Top-most editor config file. Do not inherit anything from above here.
+root = true
+
+# All files
+[*.*]
+indent_style = space
+indent_size = 4
+indent_braces = false

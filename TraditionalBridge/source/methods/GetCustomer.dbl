@@ -1,0 +1,43 @@
+
+import TraditionalBridge.Models
+
+function GetCustomer, string
+    required in    CustomerID, d6
+    required out   CustomerRecord, strCustomers
+    required out   ErrorMessage, string
+    stack record
+        ch, i4
+        retval, string
+    endrecord
+proc
+    retval = "OK"
+
+    try
+    begin
+        open(ch=0,i:i,"DAT:employee.ism")
+        read(ch,CustomerRecord,CustomerID)
+    end
+    catch (e, @KeyNotSameException)
+    begin
+        retval = "ERROR"
+        ErrorMessage = "Customer not found!"
+    end
+    catch (e, @EndOfFileException)
+    begin
+        retval = "ERROR"
+        ErrorMessage = "Customer not found!"
+    end
+    catch (e, @Exception)
+    begin
+        retval = "ERROR"
+        ErrorMessage = "An unexpected error occurred: " + e.message
+    end
+    finally
+    begin
+        if (ch > 0) close ch
+    end
+    endtry
+
+    freturn retval
+
+endfunction
