@@ -155,6 +155,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LinuxFiles", "LinuxFiles", 
 		Publish\LinuxFIles\dump = Publish\LinuxFIles\dump
 		Publish\LinuxFIles\startserver = Publish\LinuxFIles\startserver
 		Publish\LinuxFIles\stopserver = Publish\LinuxFIles\stopserver
+		Publish\LinuxFIles\startserver.LinuxDemo.config = Publish\LinuxFIles\startserver.LinuxDemo.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsFiles", "WindowsFiles", "{67E982C3-3FF9-4517-9FB7-6BE3CDE940D3}"

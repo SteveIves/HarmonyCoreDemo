@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VALID_ENVIRONMENTS="|Development|"
+VALID_ENVIRONMENTS="|LinuxDemo|"
 
 # Make sure we are in the same directory as the script
 
@@ -10,17 +10,17 @@ cd $SCRIPT_DIR
 # Get the environment name
 
 if [ -e environment ]; then
-  ENVIRONMENT=`cat environment`
+  ENVIRONMENT=`cat .environment`
   if [ -z "$ENVIRONMENT" ]; then
-    echo "ERROR: Failed to determine environment name. Check file 'environment'"
+    echo "ERROR: Failed to determine environment name. Check hidden file '.environment'"
     return 2> /dev/null; exit
   fi
   if [[ ! "$VALID_ENVIRONMENTS" == *"|$ENVIRONMENT|"* ]]; then
-    echo "ERROR: Invalid environment name $ENVIRONMENT in file 'environment'"
+    echo "ERROR: Invalid environment name $ENVIRONMENT in hidden file '.environment'"
     return 2> /dev/null; exit
   fi
 else
-  echo "ERROR: Unable to determine environment. Define the environment name in file 'environment'"
+  echo "ERROR: Unable to determine environment. Define the environment name in hidden file '.environment'"
   echo "Valid environments: $VALID_ENVIRONMENTS"
   echo "Do not include the | characters"
   return 2> /dev/null; exit
@@ -40,6 +40,15 @@ if [ -e startserver.$ENVIRONMENT.config ]; then
   source startserver.$ENVIRONMENT.config
 fi
 
+# Define the binary name for this instance of the service
+
+export SERVER_BINARY=Services.Host.$ENVIRONMENT
+
+# Provide a custom binary if necessary so we can tell the difference between multiple services running on the same system
+
+if [ ! -e $SERVER_BINARY ]; then cp Services.Host $SERVER_BINARY; fi
+if [ ! -e $SERVER_BINARY.pfx ]; then cp Services.Host.pfx $SERVER_BINARY.pfx; fi
+
 # Configure the ASP.NET environment
 
 export ASPNETCORE_ENVIRONMENT=$ENVIRONMENT
@@ -53,12 +62,6 @@ export ASPNETCORE_Kestrel__Certificates__Default__Password="p@ssw0rd"
 #export COMPlus_DbgMiniDumpType=4
 #export COMPlus_EnableCrashReport=1
 
-# Provide a custom binary if necessary so we can tell the difference between multiple services running on the same system
-
-if [ "$ENVIRONMENT" == "MavisSynDebug" ] || [ "$ENVIRONMENT" == "MavisSynStaging" ] || [ "$ENVIRONMENT" == "MavisSynTest" ]; then
-  if [ ! -e $SERVER_BINARY ]; then cp Services.Host $SERVER_BINARY; fi
-  if [ ! -e $SERVER_BINARY.pfx ]; then cp Services.Host.pfx $SERVER_BINARY.pfx; fi
-fi
 
 # Check the service is not already running
 

@@ -13,22 +13,22 @@ fi
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd $SCRIPT_DIR
 
-VALID_ENVIRONMENTS="|Development|"
+VALID_ENVIRONMENTS="|LinuxDemo|"
 
 # Get the environment name
 
-if [ -e environment ]; then
-  ENVIRONMENT=`cat environment`
+if [ -e .environment ]; then
+  ENVIRONMENT=`cat .environment`
   if [ -z "$ENVIRONMENT" ]; then
-    echo "ERROR: Failed to determine environment name. Check file 'environment'"
+    echo "ERROR: Failed to determine environment name. Check hidden file '.environment'"
     return 2> /dev/null; exit
   fi
   if [[ ! "$VALID_ENVIRONMENTS" == *"|$ENVIRONMENT|"* ]]; then
-    echo "ERROR: Invalid environment name $ENVIRONMENT in file 'environment'"
+    echo "ERROR: Invalid environment name $ENVIRONMENT in hidden file '.environment'"
     return 2> /dev/null; exit
   fi
 else
-  echo "ERROR: Unable to determine environment. Define the environment name in file 'environment'"
+  echo "ERROR: Unable to determine environment. Define the environment name in hidden file '.environment'"
   echo "Valid environments: $VALID_ENVIRONMENTS"
   echo "Do not include the | characters"
   return 2> /dev/null; exit
@@ -41,6 +41,10 @@ if [ -e startserver.$ENVIRONMENT.config ]; then
   chmod +x startserver.$ENVIRONMENT.config
   source startserver.$ENVIRONMENT.config
 fi
+
+# Define the binary name for this instance of the service
+
+export SERVER_BINARY=Services.Host.$ENVIRONMENT
 
 # Check that the service is running
 

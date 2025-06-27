@@ -17,6 +17,11 @@ set SolutionDir=%~dp0..\
 pushd "%SolutionDir%"
 
 ::-----------------------------------------------------------------------------
+:: Options
+
+set PROVIDE_SAMPLE_DATA=YES
+
+::-----------------------------------------------------------------------------
 :: Set up the environment
 
 set SYNCMPOPT=-WD=316
@@ -188,7 +193,6 @@ if exist "TraditionalBridge\launch.bat" (
     goto fail
 )
 
-
 ::-----------------------------------------------------------------------------
 :: Provide launch script and other files (Linux)
 
@@ -265,6 +269,31 @@ if exist "XmlDoc\Services.Models.xml" (
   copy /y "XmlDoc\Services.Models.xml" "%DeployDir%\XmlDoc" > nul 2>&1
   "%DOS2UNIXEXE%" -q "%DeployDir%\XmlDoc\Services.Models.xml"
 )
+
+::-----------------------------------------------------------------------------
+:: Provide sample data (don't do this in a production environment!)
+
+:sample_data
+
+if /i "%PROVIDE_SAMPLE_DATA%" neq "YES" goto zip
+
+echo Providing sample data
+
+mkdir "%DeployDir%\SampleData"
+
+copy "%SolutionDir%SampleData\customers.txt" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\items.txt" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\order_items.txt" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\orders.txt" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\vendors.txt" "%DeployDir%\SampleData" > nul 2>&1
+
+copy "%SolutionDir%SampleData\customers.xdl" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\items.xdl" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\order_items.xdl" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\orders.xdl" "%DeployDir%\SampleData" > nul 2>&1
+copy "%SolutionDir%SampleData\vendors.xdl" "%DeployDir%\SampleData" > nul 2>&1
+
+copy "%SolutionDir%SampleData\sysparams.txt" "%DeployDir%\SampleData\sysparams.ddf" > nul 2>&1
 
 ::-----------------------------------------------------------------------------
 :: Create the ZIP file
