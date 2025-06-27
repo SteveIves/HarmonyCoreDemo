@@ -1,31 +1,66 @@
-﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)Common.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Configuration)' == '' ">AnyCPU</Platform>
     <Name>Repository</Name>
-    <OutputName>Repository</OutputName>
+    <OutputName>repository</OutputName>
     <ProjectGuid>{d5c15afb-b432-4197-b931-03e5ae7f15e1}</ProjectGuid>
     <ProjectTypeGuids>{1BD24377-84D3-44B8-B8F3-81C1EB3E22B4};{BBD0F5D1-1CC4-42fd-BA4C-A96779C64378}</ProjectTypeGuids>
-    <NugetTargetMoniker>RPS,Version=1.0</NugetTargetMoniker>
     <OutputType>RPS</OutputType>
+    <DBL_qTrim>True</DBL_qTrim>
+    <DBL_qAlign>True</DBL_qAlign>
     <EnableCommonProperties>True</EnableCommonProperties>
-    <AssemblyName>Repository</AssemblyName>
-    <RootNamespace>Repository</RootNamespace>
+    <AssemblyName>repository</AssemblyName>
+    <RootNamespace>repository</RootNamespace>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <RunPreBuildEvent>Always</RunPreBuildEvent>
+    <RunPostBuildEvent>On successful build</RunPostBuildEvent>
+    <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
+    <OutputPath>$(SolutionDir)RPS</OutputPath>
+    <MOutputName>rpsmain</MOutputName>
+    <TOutputName>rpstext</TOutputName>
+    <UnevaluatedOutputPath>REPOSITORY:</UnevaluatedOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Prefer32Bit Condition=" '$(TargetFrameworkVersion)'  != 'v4.0' AND '$(Prefer32Bit)' != 'false' ">true</Prefer32Bit>
+    <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>.\</OutputPath>
-    <UnevaluatedOutputPath>.\</UnevaluatedOutputPath>
     <MOutputName>rpsmain</MOutputName>
     <TOutputName>rpstext</TOutputName>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <UseExistingRepository>False</UseExistingRepository>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Debug</DebugOptimize>
+    <UnevaluatedOutputPath>.\</UnevaluatedOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Prefer32Bit Condition=" '$(TargetFrameworkVersion)'  != 'v4.0' AND '$(Prefer32Bit)' != 'false' ">true</Prefer32Bit>
+    <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>.\</OutputPath>
-    <UnevaluatedOutputPath>.\</UnevaluatedOutputPath>
     <MOutputName>rpsmain</MOutputName>
     <TOutputName>rpstext</TOutputName>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Optimize</DebugOptimize>
+    <UnevaluatedOutputPath>.\</UnevaluatedOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <Prefer32Bit Condition=" '$(TargetFrameworkVersion)'  != 'v4.0' AND '$(Prefer32Bit)' != 'false' ">true</Prefer32Bit>
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <PlatformTarget>x64</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Debug</DebugOptimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <Prefer32Bit Condition=" '$(TargetFrameworkVersion)'  != 'v4.0' AND '$(Prefer32Bit)' != 'false' ">true</Prefer32Bit>
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <MOutputName>rpsmain</MOutputName>
+    <TOutputName>rpstext</TOutputName>
+    <PlatformTarget>x64</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
   <Import Project="C:\Program Files (x86)\Common Files\Synergex\Build\dbl\Synergex.SynergyDE.Repository.targets" />
   <PropertyGroup>

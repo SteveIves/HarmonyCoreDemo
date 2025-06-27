@@ -16,6 +16,9 @@ setlocal ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
 set SolutionDir=%~dp0..\
 pushd "%SolutionDir%"
 
+::-----------------------------------------------------------------------------
+:: Set up the environment
+
 set SYNCMPOPT=-WD=316
 
 if not defined RPSMFIL set RPSMFIL="%SolutionDir%Repository\rpsmain.ism"
@@ -50,16 +53,13 @@ if not exist "%SEVENZIPEXE%" (
     goto fail
 )
 
-:: Set up the deployment directory
-set DeployDir=%SolutionDir%PUBLISH\%TARGET%
-
 :: Release or Debug?
 set CONFIGURATION=Release
 if /i "%2" == "DEBUG" set CONFIGURATION=Debug
 
 set HC_PLATFORM=AnyCPU
 
-:: Set the hat=rmony core runtime based on the target
+:: Set the harmony core runtime based on the target
 if "%TARGET%" == "WINDOWS" set HC_RUNTIME=win-x64
 if "%TARGET%" == "LINUX"   set HC_RUNTIME=linux-x64
 
@@ -67,7 +67,10 @@ if "%TARGET%" == "LINUX"   set HC_RUNTIME=linux-x64
 if "%TARGET%" == "WINDOWS" set BRIDGE_PLATFORM=x64
 if "%TARGET%" == "LINUX"   set BRIDGE_PLATFORM=linux64
 
-:: If there is an old PUBLISH folder, delete it\
+:: Set up the deployment directory
+set DeployDir=%SolutionDir%PUBLISH\%TARGET%TMP
+
+:: If there is an old PUBLISH folder, delete it
 if exist "%DeployDir%\." rmdir /S /Q "%DeployDir%" > nul 2>&1
 if exist "%DeployDir%\." (
     echo.
@@ -76,16 +79,17 @@ if exist "%DeployDir%\." (
     goto fail
 )
 
-:: Set release date/time stamp
+:: And create a new one
+mkdir "%DeployDir%"
 
+:: Set release date/time stamp
 for /f %%i in ('powershell -command "[DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss')"') do set DateTimeStamp=%%i
 
-:: Determine ZIP file name
-
-set ZIP_FILE=%SolutionDir%Publish\ZipFiles\HarmonyCore-%TARGET%-%DateTimeStamp%.zip
+:: Set the ZIP file name
+set ZIP_FILE=%SolutionDir%Publish\HarmonyCore-%HC_RUNTIME%-%DateTimeStamp%.zip
 
 :: ---------------------------------------------------------------------------
-:: Build Traditional Bridge code
+:: Build the Traditional Bridge code
 
 echo.
 echo Building Traditional Bridge code in %CONFIGURATION% mode
@@ -93,13 +97,15 @@ echo Building Traditional Bridge code in %CONFIGURATION% mode
 pushd TraditionalBridge
 
 msbuild ^
-    -target:Rebuild ^
-    -p:Platform=%BRIDGE_PLATFORM% ^
-    -p:Configuration=%CONFIGURATION% ^
-    -verbosity:minimal ^
-    -nodeReuse:false ^
-    -nologo ^
-    TraditionalBridge.synproj
+-target:Rebuild ^
+-p:Platform=%BRIDGE_PLATFORM% ^
+-p:Configuration=%CONFIGURATION% ^
+-verbosity:minimal ^
+-nodeReuse:false ^
+-nologo ^
+TraditionalBridge.synproj
+
+msbuild -target:Rebuild -p:Platform=linux64 -p:Configuration=Release -verbosity:minimal -nodeReuse:false -nologo TraditionalBridge.synproj
 
 if errorlevel 0 (
     echo.
@@ -116,7 +122,7 @@ if errorlevel 0 (
 popd
 
 :: ---------------------------------------------------------------------------
-:: Build and publish the Harmony Core service
+:: Build and publish the Harmony Core code
 
 echo.
 echo Publishing Harmony Core service in %CONFIGURATION% mode
@@ -125,15 +131,15 @@ echo.
 pushd Services.Host
 
 dotnet publish ^
-    -p:platform=%HC_PLATFORM% ^
-    -p:PublishTrimmed=false ^
-    --configuration %CONFIGURATION% ^
-    --runtime %HC_RUNTIME% ^
-    --self-contained true ^
-    --output "%DeployDir%" ^
-    --no-restore ^
-    --verbosity minimal ^
-    -nologo
+-p:platform=%HC_PLATFORM% ^
+-p:PublishTrimmed=false ^
+--configuration %CONFIGURATION% ^
+--runtime %HC_RUNTIME% ^
+--self-contained true ^
+--output "%DeployDir%" ^
+--no-restore ^
+--verbosity minimal ^
+-nologo
 
 if errorlevel 0 (
     echo.
@@ -149,7 +155,8 @@ if errorlevel 0 (
 
 popd
 
-:: Include the Traditional Bridge host program
+::-----------------------------------------------------------------------------
+:: Include the Traditional Bridge host program and dbp
 
 if exist TraditionalBridge\EXE\host.dbr (
     echo Providing traditional bridge host application
@@ -166,57 +173,65 @@ if exist TraditionalBridge\EXE\host.dbp (
     goto fail
 )
 
+::-----------------------------------------------------------------------------
 :: Provide launch script and other files (Windows)
 
-if "%TARGET%"=="WINDOWS" (
+:windows_files
 
-    if exist TraditionalBridge\launch.bat (
-        echo Providing traditional bridge launch script
-        copy /y TraditionalBridge\launch.bat "%DeployDir%" > nul 2>&1
-    ) else (
-        echo ERROR: Traditional bridge launch script not found!
-        goto fail
-    )
+if /i "%TARGET%" neq "WINDOWS" goto linux_files
+
+if exist "TraditionalBridge\launch.bat" (
+    echo Providing traditional bridge launch script
+    copy /y "TraditionalBridge\launch.bat" "%DeployDir%" >nul 2>&1
+) else (
+    echo ERROR: Traditional bridge launch script not found!
+    goto fail
 )
 
+
+::-----------------------------------------------------------------------------
 :: Provide launch script and other files (Linux)
 
-if "%TARGET%"=="LINUX" (
+:linux_files
 
-    if exist TraditionalBridge\launch (
-        echo Providing traditional bridge launch script
-        copy /y TraditionalBridge\launch "%DeployDir%" > nul 2>&1
-        "%DOS2UNIXEXE%" -q "%DeployDir%\launch"
-    ) else (
-        echo ERROR: Traditional bridge launch script not found!
-        goto fail
-    )
+if /i "%TARGET%" neq "LINUX" goto ssl_cert
 
-    :: Provide service control scripts
-
-    echo Providing service configuration and control scripts
-
-    copy /y "%SolutionDir%Publish\LinuxFiles\startserver" "%DeployDir%\startserver" > nul 2>&1
-    "%DOS2UNIXEXE%" -q "%DeployDir%\startserver"
-
-    copy /y "%SolutionDir%Publish\LinuxFiles\stopserver" "%DeployDir%\stopserver" > nul 2>&1
-    "%DOS2UNIXEXE%" -q "%DeployDir%\stopserver"
-
-    copy /y "%SolutionDir%Publish\LinuxFiles\startserver.*.config" "%DeployDir%" > nul 2>&1
-    "%DOS2UNIXEXE%" -q "%DeployDir%\startserver.*.config"
-
-    :: Provide check and dump scripts
-
-    echo Providing useful utility scripts
-
-    copy /y "%SolutionDir%Publish\LinuxFiles\check" "%DeployDir%\check" > nul 2>&1
-    "%DOS2UNIXEXE%" -q "%DeployDir%\check"
-
-    copy /y "%SolutionDir%Publish\LinuxFiles\dump" "%DeployDir%\dump" > nul 2>&1
-    "%DOS2UNIXEXE%" -q "%DeployDir%\dump"
+if exist TraditionalBridge\launch (
+    echo Providing traditional bridge launch script
+    copy /y TraditionalBridge\launch "%DeployDir%" > nul 2>&1
+    "%DOS2UNIXEXE%" -q "%DeployDir%\launch"
+) else (
+    echo ERROR: Traditional bridge launch script not found!
+    goto fail
 )
 
-:: Provide a SSL certificate
+:: Provide service control scripts
+
+echo Providing service configuration and control scripts
+
+copy /y "%SolutionDir%Publish\LinuxFiles\startserver" "%DeployDir%\startserver" > nul 2>&1
+"%DOS2UNIXEXE%" -q "%DeployDir%\startserver"
+
+copy /y "%SolutionDir%Publish\LinuxFiles\stopserver" "%DeployDir%\stopserver" > nul 2>&1
+"%DOS2UNIXEXE%" -q "%DeployDir%\stopserver"
+
+copy /y "%SolutionDir%Publish\LinuxFiles\startserver.*.config" "%DeployDir%" > nul 2>&1
+"%DOS2UNIXEXE%" -q "%DeployDir%\startserver.*.config"
+
+:: Provide check and dump scripts
+
+echo Providing useful utility scripts
+
+copy /y "%SolutionDir%Publish\LinuxFiles\check" "%DeployDir%\check" > nul 2>&1
+"%DOS2UNIXEXE%" -q "%DeployDir%\check"
+
+copy /y "%SolutionDir%Publish\LinuxFiles\dump" "%DeployDir%\dump" > nul 2>&1
+"%DOS2UNIXEXE%" -q "%DeployDir%\dump"
+
+::-----------------------------------------------------------------------------
+:: Provide an SSL certificate
+
+:ssl_cert
 
 echo Providing a self-signed SSL certificate
 
@@ -227,7 +242,10 @@ if not exist "%DeployDir%\Services.Host.pfx" (
     goto fail
 )
 
+::-----------------------------------------------------------------------------
 :: Provide XML documentation files
+
+:xml_doc
 
 echo Providing XML documentation files
 
@@ -248,7 +266,10 @@ if exist "XmlDoc\Services.Models.xml" (
   "%DOS2UNIXEXE%" -q "%DeployDir%\XmlDoc\Services.Models.xml"
 )
 
+::-----------------------------------------------------------------------------
 :: Create the ZIP file
+
+:zip
 
 if exist "%DeployDir%\." (
     echo.
@@ -258,23 +279,30 @@ if exist "%DeployDir%\." (
 
     if ERRORLEVEL 0 (
         echo.
-        echo Harmony Core publish complete
+        echo Publish complete
+        ::Remove the temporary deployment directory
+        popd
+        rmdir /S /Q "%DeployDir%" > nul 2>&1
     ) else (
-        echo ERROR: Failed to create zip file! The published application is in %DeployDir%
+        echo ERROR: Publish complete but failed to create zip file! The published application is in %DeployDir%
         echo.
-        echo Harmony Core publish complete
+        echo 
         popd
         goto fail
     )
-    popd
 )
 
+::-----------------------------------------------------------------------------
+:: Exit points
+
 :done
+
 popd
 endlocal
 exit /b 0
 
 :fail
+
 popd
 endlocal
 exit /b 1

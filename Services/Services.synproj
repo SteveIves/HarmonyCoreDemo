@@ -14,16 +14,19 @@
     <DBLCmdOptions>-WD=316</DBLCmdOptions>
     <RootNamespace>Services</RootNamespace>
     <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
+    <IncludeDebugInformation>False</IncludeDebugInformation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
     <UnevaluatedOutputPath>bin\$(Platform)\$(Configuration)</UnevaluatedOutputPath>
     <DocumentationFile>bin\$(Platform)\$(Configuration)\Services.xml</DocumentationFile>
+    <RunVerifyPostCompile>False</RunVerifyPostCompile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <UnevaluatedOutputPath>bin\$(Platform)\$(Configuration)</UnevaluatedOutputPath>
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
     <DocumentationFile>bin\$(Platform)\$(Configuration)\Services.xml</DocumentationFile>
+    <RunVerifyPostCompile>False</RunVerifyPostCompile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Harmony.Core">
@@ -220,6 +223,6 @@
     <Compile Include="Temp\MyExternalContextPool.dbl" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(ProjectDir)bin\$(Platform)\$(Configuration)\Services.xml&quot; &quot;$(SolutionDir)XmlDoc\Services.xml&quot; &gt; nul" />
+      <Exec Command="copy /Y &quot;$(ProjectDir)bin\$(Platform)\$(Configuration)\Services.xml&quot; &quot;$(SolutionDir)XmlDoc\Services.xml&quot; &gt; nul" />
   </Target>
 </Project>

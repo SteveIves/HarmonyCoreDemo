@@ -6,6 +6,8 @@
     <ProjectGuid>{dfbe0e7b-c223-430a-a7da-fbeac5582fc3}</ProjectGuid>
     <Name>CustomConverters</Name>
     <RootNamespace>Harmony.Core.Converters</RootNamespace>
+    <Prefer32Bit>False</Prefer32Bit>
+    <IncludeDebugInformation>False</IncludeDebugInformation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <UnevaluatedOutputPath>bin\$(Platform)\$(Configuration)</UnevaluatedOutputPath>
