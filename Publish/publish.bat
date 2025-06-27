@@ -1,8 +1,8 @@
 @echo off
 
-rem This batch file publishes a Harmony Core service for deployment to a Linux hosting system.
+:: Publishes the Harmony Core service for deployment to either Windows or Linux
 
-rem Display help?
+:: If we have no parameters, show usage info
 if /i "%1" == "" (
     echo.
     echo Usage: publish WINDOWS [DEBUG]
@@ -21,10 +21,10 @@ set SYNCMPOPT=-WD=316
 if not defined RPSMFIL set RPSMFIL="%SolutionDir%Repository\rpsmain.ism"
 if not defined RPSTFIL set RPSTFIL="%SolutionDir%Repository\rpstext.ism"
 
+:: Are we targeting Windows or Linux?
 set TARGET=
 if /i "%1" == "WINDOWS" set TARGET=WINDOWS
 if /i "%1" == "LINUX"   set TARGET=LINUX
-
 if not defined TARGET (
     echo.
     echo ERROR: You must specify a target platform: WINDOWS or LINUX
@@ -32,6 +32,7 @@ if not defined TARGET (
     goto fail
 )
 
+:: Check for dos2unix tool
 set DOS2UNIXEXE=%SolutionDir%Tools\dos2unix.exe
 if not exist "%DOS2UNIXEXE%" (
     echo.
@@ -40,6 +41,7 @@ if not exist "%DOS2UNIXEXE%" (
     goto fail
 )
 
+:: Check for 7-zip
 set SEVENZIPEXE=%ProgramW6432%\7-zip\7z.exe
 if not exist "%SEVENZIPEXE%" (
     echo.
@@ -48,20 +50,24 @@ if not exist "%SEVENZIPEXE%" (
     goto fail
 )
 
+:: Set up the deployment directory
 set DeployDir=%SolutionDir%PUBLISH\%TARGET%
 
+:: Release or Debug?
 set CONFIGURATION=Release
 if /i "%2" == "DEBUG" set CONFIGURATION=Debug
 
 set HC_PLATFORM=AnyCPU
 
+:: Set the hat=rmony core runtime based on the target
 if "%TARGET%" == "WINDOWS" set HC_RUNTIME=win-x64
-if "%TARGET%" == "WINDOWS" set BRIDGE_PLATFORM=x64
-
 if "%TARGET%" == "LINUX"   set HC_RUNTIME=linux-x64
+
+:: Set the traditional bridge platform based on the target
+if "%TARGET%" == "WINDOWS" set BRIDGE_PLATFORM=x64
 if "%TARGET%" == "LINUX"   set BRIDGE_PLATFORM=linux64
 
-rem If there is an old PUBLISH folder, delete it\
+:: If there is an old PUBLISH folder, delete it\
 if exist "%DeployDir%\." rmdir /S /Q "%DeployDir%" > nul 2>&1
 if exist "%DeployDir%\." (
     echo.
@@ -70,17 +76,16 @@ if exist "%DeployDir%\." (
     goto fail
 )
 
-rem Set release date/time stamp
+:: Set release date/time stamp
 
 for /f %%i in ('powershell -command "[DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss')"') do set DateTimeStamp=%%i
 
-rem Determine ZIP file name
+:: Determine ZIP file name
 
 set ZIP_FILE=%SolutionDir%Publish\ZipFiles\HarmonyCore-%TARGET%-%DateTimeStamp%.zip
 
-
-rem ---------------------------------------------------------------------------
-rem Build Traditional Bridge code
+:: ---------------------------------------------------------------------------
+:: Build Traditional Bridge code
 
 echo.
 echo Building Traditional Bridge code in %CONFIGURATION% mode
@@ -110,8 +115,8 @@ if errorlevel 0 (
 
 popd
 
-rem ---------------------------------------------------------------------------
-rem Build and publish the Harmony Core service
+:: ---------------------------------------------------------------------------
+:: Build and publish the Harmony Core service
 
 echo.
 echo Publishing Harmony Core service in %CONFIGURATION% mode
@@ -144,7 +149,7 @@ if errorlevel 0 (
 
 popd
 
-rem Include the Traditional Bridge host program
+:: Include the Traditional Bridge host program
 
 if exist TraditionalBridge\EXE\host.dbr (
     echo Providing traditional bridge host application
@@ -161,7 +166,7 @@ if exist TraditionalBridge\EXE\host.dbp (
     goto fail
 )
 
-rem Provide launch script and other files (Windows)
+:: Provide launch script and other files (Windows)
 
 if "%TARGET%"=="WINDOWS" (
 
@@ -174,7 +179,7 @@ if "%TARGET%"=="WINDOWS" (
     )
 )
 
-rem Provide launch script and other files (Linux)
+:: Provide launch script and other files (Linux)
 
 if "%TARGET%"=="LINUX" (
 
@@ -187,7 +192,7 @@ if "%TARGET%"=="LINUX" (
         goto fail
     )
 
-    rem Provide service control scripts
+    :: Provide service control scripts
 
     echo Providing service configuration and control scripts
 
@@ -200,7 +205,7 @@ if "%TARGET%"=="LINUX" (
     copy /y "%SolutionDir%Publish\LinuxFiles\startserver.*.config" "%DeployDir%" > nul 2>&1
     "%DOS2UNIXEXE%" -q "%DeployDir%\startserver.*.config"
 
-    rem Provide check and dump scripts
+    :: Provide check and dump scripts
 
     echo Providing useful utility scripts
 
@@ -211,7 +216,7 @@ if "%TARGET%"=="LINUX" (
     "%DOS2UNIXEXE%" -q "%DeployDir%\dump"
 )
 
-rem Provide a SSL certificate
+:: Provide a SSL certificate
 
 echo Providing a self-signed SSL certificate
 
@@ -222,7 +227,7 @@ if not exist "%DeployDir%\Services.Host.pfx" (
     goto fail
 )
 
-rem Provide XML documentation files
+:: Provide XML documentation files
 
 echo Providing XML documentation files
 
@@ -243,9 +248,11 @@ if exist "XmlDoc\Services.Models.xml" (
   "%DOS2UNIXEXE%" -q "%DeployDir%\XmlDoc\Services.Models.xml"
 )
 
+:: Create the ZIP file
+
 if exist "%DeployDir%\." (
     echo.
-    echo Zipping HarmonyCore binaries to %ZIP_FILE%
+    echo Creating distribution %ZIP_FILE%
     pushd "%DeployDir%"
     "%SEVENZIPEXE%" a -r -bso0 -bsp0 "%ZIP_FILE%" *
 
