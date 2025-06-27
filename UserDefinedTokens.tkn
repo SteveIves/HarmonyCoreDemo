@@ -10,7 +10,7 @@
 <API_DOCS_PATH>api-docs</API_DOCS_PATH>
 <API_TITLE>Harmony Core Web Services</API_TITLE>
 <API_VERSION>1</API_VERSION>
-<API_DESCRIPTION>A data and code-centic web service API for interacting with the ASA TireMax application.</API_DESCRIPTION>
+<API_DESCRIPTION>A data and code-centic web service API for interacting with a DBL application and its data.</API_DESCRIPTION>
 <API_TERMS>Open Source</API_TERMS>
 <API_CONTACT_NAME>A N Other</API_CONTACT_NAME>
 <API_CONTACT_EMAIL>another@somedomain.com</API_CONTACT_EMAIL>

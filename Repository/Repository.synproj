@@ -27,23 +27,14 @@
     <TOutputName>rpstext</TOutputName>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="repository.scm" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
+  <Import Project="C:\Program Files (x86)\Common Files\Synergex\Build\dbl\Synergex.SynergyDE.Repository.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Synergex.SynergyDE.Build.25.6.1647\build\rps\Synergex.SynergyDE.Build.targets" Condition="Exists('..\packages\Synergex.SynergyDE.Build.25.6.1647\build\rps\Synergex.SynergyDE.Build.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Synergex.SynergyDE.Build.25.6.1647\build\rps\Synergex.SynergyDE.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Synergex.SynergyDE.Build.25.6.1647\build\rps\Synergex.SynergyDE.Build.targets'))" />
-  </Target>
+  <ItemGroup>
+    <Compile Include="repository.scm" />
+  </ItemGroup>
 </Project>

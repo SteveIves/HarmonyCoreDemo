@@ -56,15 +56,6 @@ else
 fi
 
 #------------------------------------------------------------------------------
-# run a startup script (Steve disabled this because no tiremax.config seems to exist anywhere? Check with Dan Ellis)
-
-#if [ -z $5 ]; then
-#  source tiremax.config
-#else
-#  source $5
-#fi
-
-#------------------------------------------------------------------------------
 # If specified, configure for remote debugging
 
 # No remote debugger support

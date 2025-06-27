@@ -28,7 +28,6 @@
     <Compile Include="WWYYValidator.dbl" />
     <Compile Include="YnDefaultNoBooleanConverter.dbl" />
     <Compile Include="YnDefaultYesBooleanConverter.dbl" />
-    <Compile Include="YYYYMMDDToTmJulian.dbl" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Harmony.Core">

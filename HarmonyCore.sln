@@ -129,8 +129,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postman Files", "Postman Fi
 		Postman_BridgeAPITests.postman_collection.json = Postman_BridgeAPITests.postman_collection.json
 		Postman_LocalDevelopment.postman_environment.json = Postman_LocalDevelopment.postman_environment.json
 		PostMan_ODataTests.postman_collection.json = PostMan_ODataTests.postman_collection.json
-		Postman_StagingServiceIIS.postman_environment.json = Postman_StagingServiceIIS.postman_environment.json
-		PostMan_StagingServiceTireMaxVM.postman_environment.json = PostMan_StagingServiceTireMaxVM.postman_environment.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Publish", "Publish", "{6D545CE6-7377-4FDB-9EF9-83638B8B613E}"

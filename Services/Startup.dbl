@@ -238,11 +238,11 @@ namespace Services
                 ;;Main Swagger configuration
                 c.SwaggerDoc("v1", new OpenApiInfo() {
                 &    Version = "v1",
-                &    Title = "TireMax Web Services",
-                &    Description = "A data and code-centic web service API for interacting with the ASA TireMax application.",
+                &    Title = "Harmony Core Web Services",
+                &    Description = "A data and code-centic web service API for interacting with a DBL application and its data.",
                 &    Contact = new OpenApiContact() {
-                &       Name = "ASA Automotive",
-                &       Email = "info@asaauto.com"
+                &       Name = "A N Other",
+                &       Email = "another@somedomain.com"
                 &    }
                 &})
                 

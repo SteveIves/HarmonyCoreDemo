@@ -175,7 +175,7 @@ rem ============================================================================
   )
 
   rem --------------------------
-  rem *** ASA/TireMax CUSTOM ***
+  rem *** CUSTOM ***
 
   echo.
   echo Generating CUSTOM interface data model classes [.NET]

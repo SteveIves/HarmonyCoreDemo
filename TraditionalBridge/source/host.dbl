@@ -86,21 +86,6 @@ proc
             endtry
         end
 
-        ;;Is the new XCTL mechanims enabled?
-        xcall getlog("NEW_XCTL_MINUTES",tmpa,length)
-        if (length)
-        begin
-            try
-            begin
-                StuckProcessTracking.XctlMinutes = %integer(tmpa(1:length))
-            end
-            catch (e, @Exception)
-            begin
-                StuckProcessTracking.XctlMinutes = 0
-            end
-            endtry
-        end
-
         ;;Create a new instance of the main "dispather" class
         dispatcher = new SuperRoutineDispatcher(MethodDispatcher.GetDispatchers())
         
@@ -166,44 +151,6 @@ subroutine U_MESSAGE
 proc
     if(Logger.Instance != ^null)
         Logger.Instance.Log("U_MESSAGE was called: " + a_msg)
-    xreturn
-endsubroutine
-
-;;; <summary>
-;;; Override the TireMax XMESG routine and make it log to the traditional bridge log
-;;; </summary>
-;;; <param name="msg">Message to display</param>
-subroutine XMESG
-    required in msg, a
-proc
-    If(Logger.Instance != ^null)
-        Logger.Instance.Log("XMESG was called: " + msg)
-    xreturn
-endsubroutine
-
-;;; <summary>
-;;; Override the TireMax XDISP routine and make it log to the traditional bridge log
-;;; </summary>
-;;; <param name="row"></param>
-;;; <param name="col"></param>
-;;; <param name="len"></param>
-;;; <param name="fmat"></param>
-;;; <param name="erase"></param>
-;;; <param name="line"></param>
-;;; <param name="char"></param>
-;;; <param name="text"></param>
-subroutine XDISP
-    row	    ,d	;Screen row
-    col	    ,d	;Screen column
-    len	    ,d	;Length of text string
-    fmat	,d	;Format SWI -- ignored
-    erase	,d	;Erase functions
-    line	,d	;Line atributes
-    char	,d	;Character attributes selected.
-    text	,a	;Text string to be displayed
-proc
-    If(Logger.Instance != ^null)
-        Logger.Instance.Log("XDISP was called: " + %atrimtostring(text))
     xreturn
 endsubroutine
 
